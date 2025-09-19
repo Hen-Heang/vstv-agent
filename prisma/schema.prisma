@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Decimal
+  priceType   String   // "rent" or "sale"
+  propertyType String  // "apartment", "condo", "villa", "house", "land"
+  bedrooms    Int?
+  bathrooms   Int?
+  area        Decimal? // in square meters
+  location    String
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  images      String[] // Array of image URLs
+  features    String[] // Array of features like "pool", "gym", "parking"
+  isFeatured  Boolean  @default(false)
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  agentId     String
+  agent       Agent    @relation(fields: [agentId], references: [id])
+  
+  @@map("properties")
+}
+
+model Agent {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  telegram    String?
+  bio         String?
+  experience  Int?     // years of experience
+  avatar      String?  // profile image URL
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  properties  Property[]
+  
+  @@map("agents")
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String?  // icon name or URL
+  features    String[] // Array of service features
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("services")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  subject   String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@map("contacts")
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  mission     String?
+  vision      String?
+  values      String[] // Array of company values
+  address     String?
+  phone       String?
+  email       String?
+  website     String?
+  socialMedia Json?    // Social media links
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("company")
+}

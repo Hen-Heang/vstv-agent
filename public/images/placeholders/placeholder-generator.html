@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Image Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .placeholder {
+            background: linear-gradient(45deg, #e0e0e0, #f0f0f0);
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .property-placeholder {
+            width: 400px;
+            height: 300px;
+        }
+        .agent-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+        .hero-placeholder {
+            width: 100%;
+            height: 400px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ VSTV Agent - Image Placeholders</h1>
+        
+        <div class="instructions">
+            <h3>📋 How to Add Your Own Images</h3>
+            <p>Replace these placeholder images with your actual property photos and agent headshots:</p>
+            
+            <h4>1. Property Images</h4>
+            <p>Add your property photos to: <code>public/images/properties/featured/</code></p>
+            <ul>
+                <li>Use high-quality, well-lit photos</li>
+                <li>Recommended size: 1200x800px or larger</li>
+                <li>Format: JPG or WebP</li>
+                <li>Name files descriptively (e.g., luxury-condo-bkk1.jpg)</li>
+            </ul>
+            
+            <h4>2. Agent Photos</h4>
+            <p>Add agent headshots to: <code>public/images/agents/</code></p>
+            <ul>
+                <li>Professional headshots</li>
+                <li>Square aspect ratio (400x400px)</li>
+                <li>Consistent lighting and style</li>
+                <li>Name files with agent names (e.g., john-doe.jpg)</li>
+            </ul>
+            
+            <h4>3. Company Images</h4>
+            <p>Add company assets to: <code>public/images/company/</code></p>
+            <ul>
+                <li>Logo in SVG format (preferred)</li>
+                <li>Office building photos</li>
+                <li>Team photos</li>
+            </ul>
+        </div>
+        
+        <h3>📐 Image Placeholders</h3>
+        
+        <h4>Property Card Images (400x300px)</h4>
+        <div class="placeholder property-placeholder">
+            Property Image Placeholder<br>
+            400 × 300px
+        </div>
+        
+        <h4>Agent Profile Photos (200x200px)</h4>
+        <div class="placeholder agent-placeholder">
+            Agent Photo<br>
+            200 × 200px
+        </div>
+        
+        <h4>Hero Background Images</h4>
+        <div class="placeholder hero-placeholder">
+            Hero Background Placeholder<br>
+            Full Width × 400px
+        </div>
+        
+        <h3>🔧 Quick Setup Commands</h3>
+        <div class="code-block">
+# Download sample images (optional)
+node scripts/setup-images.js
+
+# Create additional directories if needed
+mkdir -p public/images/properties/apartments
+mkdir -p public/images/properties/condos
+mkdir -p public/images/properties/villas
+mkdir -p public/images/properties/houses
+        </div>
+        
+        <h3>💡 Tips for Better Images</h3>
+        <ul>
+            <li><strong>Lighting:</strong> Use natural light or professional lighting</li>
+            <li><strong>Angles:</strong> Show multiple angles of each property</li>
+            <li><strong>Quality:</strong> Use high-resolution images (at least 1200px wide)</li>
+            <li><strong>Consistency:</strong> Maintain consistent style across all images</li>
+            <li><strong>Optimization:</strong> Compress images for web without losing quality</li>
+            <li><strong>Alt Text:</strong> Always provide descriptive alt text for accessibility</li>
+        </ul>
+        
+        <h3>🛠️ Image Optimization Tools</h3>
+        <ul>
+            <li><strong>Online:</strong> TinyPNG, Squoosh.app, ImageOptim</li>
+            <li><strong>Desktop:</strong> Adobe Photoshop, GIMP, ImageMagick</li>
+            <li><strong>Command Line:</strong> Sharp (Node.js), ImageMagick</li>
+        </ul>
+    </div>
+</body>
+</html>
