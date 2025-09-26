@@ -59,7 +59,7 @@ export default function CompanyShowcase() {
           <Card className="overflow-hidden">
             <div className="relative h-64 md:h-96">
               <Image
-                src="/images/company/CSTV-Cover-24-06-25.jpg"
+                src="/images/company/VSTV.png"
                 alt="VSTV Agent Company"
                 fill
                 className="object-cover"

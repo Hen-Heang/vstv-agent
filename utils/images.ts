@@ -100,19 +100,19 @@ export const companyImages = {
     height: 100
   },
   cover: {
-    src: '/images/company/CSTV-Cover-24-06-25.jpg',
+    src: '/images/company/VSTV.png',
     alt: 'VSTV Agent Company Cover',
     width: 1920,
     height: 1080
   },
   heroBackground: {
-    src: '/images/company/CSTV-Cover-24-06-25.jpg',
+    src: '/images/company/VSTV.png',
     alt: 'VSTV Agent Company Background',
     width: 1920,
     height: 1080
   },
   officeBuilding: {
-    src: '/images/company/CSTV-Cover-24-06-25.jpg',
+    src: '/images/company/VSTV.png',
     alt: 'VSTV Agent Office Building',
     width: 800,
     height: 600

@@ -10,7 +10,7 @@ const heroSlides = [
     id: 1,
     title: "Find Your Dream Condo & Apartment in Cambodia",
     subtitle: "Trusted real estate agent for rental & sales. Expert guidance for your property investment journey.",
-    backgroundImage: "/images/company/CSTV-Cover-24-06-25.jpg",
+    backgroundImage: "/images/company/VSTV.png",
     cta: "View Properties"
   },
   {
