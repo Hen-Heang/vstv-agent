@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { MapPin, Navigation, ZoomIn, ZoomOut, Layers } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+import { MapPin, Navigation, ZoomIn, ZoomOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
@@ -25,10 +26,10 @@ interface InteractiveMapProps {
 export default function InteractiveMap({ 
   markers = [], 
   center = { lat: 11.5564, lng: 104.9282 }, 
-  zoom = 12,
+  zoom: _zoom = 12,
   className = ''
 }: InteractiveMapProps) {
-  const [currentZoom, setCurrentZoom] = useState(zoom)
+  // const [currentZoom, setCurrentZoom] = useState(zoom)
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
   const [mapLayers, setMapLayers] = useState<'satellite' | 'street' | 'hybrid'>('street')
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -67,11 +68,11 @@ export default function InteractiveMap({
   const displayMarkers = markers.length > 0 ? markers : defaultMarkers
 
   const handleZoomIn = () => {
-    setCurrentZoom(prev => Math.min(prev + 1, 20))
+    // setCurrentZoom(prev => Math.min(prev + 1, 20))
   }
 
   const handleZoomOut = () => {
-    setCurrentZoom(prev => Math.max(prev - 1, 1))
+    // setCurrentZoom(prev => Math.max(prev - 1, 1))
   }
 
   const handleLayerChange = (layer: 'satellite' | 'street' | 'hybrid') => {
@@ -175,9 +176,11 @@ export default function InteractiveMap({
       {selectedMarker && (
         <div className="absolute bottom-4 right-4 w-80 bg-white rounded-lg shadow-xl border p-4 animate-in slide-in-from-bottom-4">
           <div className="flex items-start gap-3">
-            <img
+            <Image
               src={selectedMarker.image}
               alt={selectedMarker.title}
+              width={64}
+              height={64}
               className="w-16 h-16 rounded-lg object-cover"
             />
             <div className="flex-1">

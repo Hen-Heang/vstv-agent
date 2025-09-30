@@ -4,6 +4,7 @@ const prisma = new PrismaClient()
 
 async function main() {
   // Create agents
+  /*
   const agent1 = await prisma.agent.upsert({
     where: { email: 'john@vstvagent.com' },
     update: {},
@@ -31,8 +32,10 @@ async function main() {
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     },
   })
+  */
 
   // Create properties
+  /*
   const property1 = await prisma.property.upsert({
     where: { id: 'property-1' },
     update: {},
@@ -59,7 +62,9 @@ async function main() {
       agentId: agent1.id,
     },
   })
+  */
 
+  /*
   const property2 = await prisma.property.upsert({
     where: { id: 'property-2' },
     update: {},
@@ -86,8 +91,10 @@ async function main() {
       agentId: agent2.id,
     },
   })
+  */
 
   // Create services
+  /*
   const service1 = await prisma.service.upsert({
     where: { id: 'service-1' },
     update: {},
@@ -105,7 +112,9 @@ async function main() {
       ],
     },
   })
+  */
 
+  /*
   const service2 = await prisma.service.upsert({
     where: { id: 'service-2' },
     update: {},
@@ -123,8 +132,10 @@ async function main() {
       ],
     },
   })
+  */
 
   // Create company info
+  /*
   const company = await prisma.company.upsert({
     where: { id: 'company-1' },
     update: {},
@@ -146,6 +157,7 @@ async function main() {
       },
     },
   })
+  */
 
   console.log('Database seeded successfully!')
 }

@@ -1,35 +1,32 @@
-import { notFound } from 'next/navigation'
+// import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Phone, MessageCircle, Mail, MapPin, Award, Calendar, Star } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
-// Mock data - in real app, this would come from database
-const mockAgent = {
-  id: 1,
-  name: "John Doe",
-  role: "Senior Real Estate Agent",
-  email: "john@vstvagent.com",
-  phone: "+855 12 345 6789",
-  telegram: "@johndoe",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-  bio: "With over 8 years of experience in the Cambodian real estate market, John specializes in luxury properties and investment opportunities. He has helped hundreds of clients find their dream homes and maximize their investment returns. John's deep understanding of local market trends and his commitment to exceptional service make him a trusted advisor for both first-time buyers and seasoned investors.",
-  experience: 8,
-  specialties: ["Luxury Properties", "Investment Consulting", "Property Management", "Market Analysis"],
+// Fallback agent data for when database is not available
+const fallbackAgent = {
+  id: "004",
+  name: "HENG KIMHONG",
+  position: "Real Estate Agent Supervisor",
+  email: "hengkimhong1803@email.com",
+  phone: "+855 96 4444 027",
+  telegram: "0889832306",
+  avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+  bio: "With extensive experience in the Cambodian real estate market, Heng Kimhong specializes in luxury properties and investment opportunities. As a supervisor, he leads a team of dedicated agents and has helped hundreds of clients find their dream homes and maximize their investment returns.",
+  experience_years: 8,
+  specialties: ["Luxury Properties", "Investment Consulting", "Property Management", "Team Leadership"],
   languages: ["English", "Khmer", "Chinese"],
-  location: "Phnom Penh",
-  propertiesSold: 150,
+  properties_sold: 180,
   rating: 4.9,
-  joinedDate: "2016-03-15",
   education: "Bachelor's in Business Administration",
-  certifications: ["Licensed Real Estate Agent", "Property Investment Specialist", "Market Analysis Certified"],
-  achievements: [
-    "Top Performer 2023",
-    "Client Satisfaction Award 2022",
-    "Sales Excellence Award 2021"
-  ]
+  certifications: ["Licensed Real Estate Agent", "Property Investment Specialist", "Team Management Certified"],
+  achievements: ["Top Performer 2023", "Team Leadership Award 2022", "Sales Excellence Award 2021"],
+  created_at: "2016-03-15T00:00:00Z"
 }
+
 
 const mockProperties = [
   {
@@ -92,22 +89,34 @@ interface AgentDetailPageProps {
   }>
 }
 
-export async function generateMetadata({ params }: AgentDetailPageProps) {
-  const { id } = await params
-  const agent = mockAgent // In real app, fetch from database
-  
+export async function generateMetadata({ }: AgentDetailPageProps) {
+  // For now, always use fallback data for metadata to avoid TypeScript issues
+  // This will be updated when the database is properly configured
   return {
-    title: `${agent.name} - VSTV Agent`,
-    description: agent.bio,
+    title: `${fallbackAgent.name} - VSTV Agent`,
+    description: fallbackAgent.bio || `Meet ${fallbackAgent.name}, a ${fallbackAgent.position} at VSTV Agent.`,
   }
 }
 
 export default async function AgentDetailPage({ params }: AgentDetailPageProps) {
   const { id } = await params
-  const agent = mockAgent // In real app, fetch from database based on id
   
-  if (!agent) {
-    notFound()
+  let agent = fallbackAgent
+  
+  try {
+    const { data: agentData, error } = await supabase
+      .from('agents')
+      .select('*')
+      .eq('id', id)
+      .eq('is_active', true)
+      .single()
+    
+    if (!error && agentData) {
+      agent = agentData
+    }
+  } catch (error) {
+    console.error('Error fetching agent:', error)
+    // Use fallback data
   }
 
   return (
@@ -150,7 +159,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               <CardHeader>
                 <div className="flex items-start space-x-6">
                   <Image
-                    src={agent.avatar}
+                    src={agent.avatar_url}
                     alt={agent.name}
                     width={120}
                     height={120}
@@ -160,7 +169,8 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <CardTitle className="text-3xl font-bold text-gray-900 mb-2">
                       {agent.name}
                     </CardTitle>
-                    <p className="text-xl text-blue-600 font-medium mb-4">{agent.role}</p>
+                    <p className="text-xl text-blue-600 font-medium mb-2">{agent.position}</p>
+                    <p className="text-sm text-gray-600 mb-4">Agent ID: {agent.id}</p>
                     
                     <div className="flex items-center mb-4">
                       <div className="flex items-center">
@@ -173,14 +183,14 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                           />
                         ))}
                         <span className="ml-2 text-sm text-gray-600">
-                          {agent.rating} ({agent.propertiesSold} properties sold)
+                          {agent.rating} ({agent.properties_sold} properties sold)
                         </span>
                       </div>
                     </div>
                     
                     <div className="flex items-center text-gray-600">
                       <MapPin className="h-5 w-5 mr-2" />
-                      <span>{agent.location}</span>
+                      <span>Phnom Penh</span>
                     </div>
                   </div>
                 </div>
@@ -204,15 +214,15 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <div className="space-y-2">
                       <div className="flex items-center">
                         <Award className="h-4 w-4 text-blue-600 mr-2" />
-                        <span className="text-sm text-gray-600">{agent.experience} years in real estate</span>
+                        <span className="text-sm text-gray-600">{agent.experience_years} years in real estate</span>
                       </div>
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 text-blue-600 mr-2" />
-                        <span className="text-sm text-gray-600">Joined VSTV Agent in {new Date(agent.joinedDate).getFullYear()}</span>
+                        <span className="text-sm text-gray-600">Joined VSTV Agent in {new Date(agent.created_at).getFullYear()}</span>
                       </div>
                       <div className="flex items-center">
                         <Star className="h-4 w-4 text-blue-600 mr-2" />
-                        <span className="text-sm text-gray-600">{agent.propertiesSold} properties sold</span>
+                        <span className="text-sm text-gray-600">{agent.properties_sold} properties sold</span>
                       </div>
                     </div>
                   </div>

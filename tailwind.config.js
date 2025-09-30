@@ -41,22 +41,24 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // VSTV Brand Colors
+        // VSTV Brand Colors - Modern Professional Palette
         brand: {
-          red: {
-            50: '#fef2f2',
-            100: '#fee2e2',
-            200: '#fecaca',
-            300: '#fca5a5',
-            400: '#f87171',
-            500: '#ff6b6b',
-            600: '#ff5252',
-            700: '#ff4444',
-            800: '#ff3333',
-            900: '#ff2222',
-            950: '#ff1111',
+          // Primary: Deep Navy Blue (Trust, Professionalism)
+          primary: {
+            50: '#f0f4ff',
+            100: '#e0e7ff',
+            200: '#c7d2fe',
+            300: '#a5b4fc',
+            400: '#818cf8',
+            500: '#6366f1',
+            600: '#4f46e5',
+            700: '#4338ca',
+            800: '#3730a3',
+            900: '#312e81',
+            950: '#1e1b4b',
           },
-          gold: {
+          // Secondary: Warm Gold (Luxury, Premium)
+          secondary: {
             50: '#fffbeb',
             100: '#fef3c7',
             200: '#fde68a',
@@ -68,6 +70,34 @@ module.exports = {
             800: '#92400e',
             900: '#78350f',
             950: '#451a03',
+          },
+          // Accent: Soft Teal (Modern, Fresh)
+          accent: {
+            50: '#f0fdfa',
+            100: '#ccfbf1',
+            200: '#99f6e4',
+            300: '#5eead4',
+            400: '#2dd4bf',
+            500: '#14b8a6',
+            600: '#0d9488',
+            700: '#0f766e',
+            800: '#115e59',
+            900: '#134e4a',
+            950: '#042f2e',
+          },
+          // Neutral: Sophisticated Grays
+          neutral: {
+            50: '#fafafa',
+            100: '#f5f5f5',
+            200: '#e5e5e5',
+            300: '#d4d4d4',
+            400: '#a3a3a3',
+            500: '#737373',
+            600: '#525252',
+            700: '#404040',
+            800: '#262626',
+            900: '#171717',
+            950: '#0a0a0a',
           },
         },
       },

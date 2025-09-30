@@ -1,9 +1,9 @@
 import { Suspense } from 'react'
 import PropertyFilters from '@/components/properties/property-filters'
 import PropertyGrid from '@/components/properties/property-grid'
-import PropertySearch from '@/components/properties/property-search'
-import InteractiveMap from '@/components/ui/interactive-map'
-import PropertyComparison from '@/components/properties/property-comparison'
+// import PropertySearch from '@/components/properties/property-search'
+// import InteractiveMap from '@/components/ui/interactive-map'
+// import PropertyComparison from '@/components/properties/property-comparison'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 

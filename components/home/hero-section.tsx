@@ -4,7 +4,7 @@ import { Search, MapPin, DollarSign, Bed } from 'lucide-react'
 
 export default function HeroSection() {
   return (
-    <div className="relative bg-gradient-to-r from-brand-red-400 to-brand-red-600 text-white">
+    <div className="relative bg-gradient-to-r from-brand-primary-600 to-brand-primary-800 text-white">
       {/* Background Image Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
       
@@ -21,7 +21,7 @@ export default function HeroSection() {
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-6xl">
             Find Your Dream Condo & Apartment in Cambodia
           </h1>
-          <p className="mt-4 text-base leading-7 text-red-100 sm:mt-6 sm:text-lg sm:leading-8">
+          <p className="mt-4 text-base leading-7 text-blue-100 sm:mt-6 sm:text-lg sm:leading-8">
             Trusted real estate agent for rental & sales. Expert guidance for your property investment journey.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:mt-10 sm:flex-row sm:gap-6">

@@ -39,20 +39,31 @@ model Property {
 }
 
 model Agent {
-  id          String   @id @default(cuid())
-  name        String
-  email       String   @unique
-  phone       String?
-  telegram    String?
-  bio         String?
-  experience  Int?     // years of experience
-  avatar      String?  // profile image URL
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  agentId       String   @unique // Official agent ID like "004", "003", etc.
+  name          String
+  role          String   // "Real Estate Agent", "Supervisor", "Manager", etc.
+  email         String   @unique
+  phone         String?
+  telegram      String?
+  bio           String?
+  experience    Int?     // years of experience
+  avatar        String?  // profile image URL
+  specialties   String[] // Array of specialties
+  languages     String[] // Array of languages spoken
+  location      String?  // Location like "Phnom Penh"
+  propertiesSold Int?    // Number of properties sold
+  rating        Float?   // Agent rating (0-5)
+  joinedDate    DateTime? // When agent joined
+  education     String?  // Education background
+  certifications String[] // Array of certifications
+  achievements  String[] // Array of achievements
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
   // Relations
-  properties  Property[]
+  properties    Property[]
   
   @@map("agents")
 }
@@ -99,4 +110,19 @@ model Company {
   updatedAt   DateTime @updatedAt
   
   @@map("company")
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  unitNo      String   // Unit identifier like "ANATA/1212B", "Morgan/3317"
+  price       Decimal  // Price in USD
+  roomType    String   // "Studio Room", "One bedroom", "Two bedroom", etc.
+  handleBy    String   // Agent name like "Rita", "KA", "Sale006 VSTV"
+  remarks     String?  // Additional notes like "Floor 5", "Available 18.08.2025", "Negotiate"
+  status      String   @default("available") // "available", "sold", "rented", "negotiate"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("units")
 }

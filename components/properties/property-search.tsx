@@ -43,7 +43,7 @@ export default function PropertySearch({ onFiltersChange, className }: PropertyS
     
     // Update active filters for display
     const active = Object.entries(filters)
-      .filter(([key, value]) => value && value !== '')
+      .filter(([, value]) => value && value !== '')
       .map(([key, value]) => `${key}: ${value}`)
     setActiveFilters(active)
   }, [filters, onFiltersChange])

@@ -69,8 +69,8 @@ export default function FeaturedListings() {
                 <div className="absolute top-4 left-4">
                   <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                     property.priceType === 'rent' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-blue-100 text-blue-800'
+                      ? 'bg-brand-accent-100 text-brand-accent-800' 
+                      : 'bg-brand-primary-100 text-brand-primary-800'
                   }`}>
                     {property.priceType === 'rent' ? 'For Rent' : 'For Sale'}
                   </span>
@@ -106,7 +106,7 @@ export default function FeaturedListings() {
                   {property.features.map((feature, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded"
+                      className="px-2 py-1 text-xs bg-brand-neutral-100 text-brand-neutral-700 rounded"
                     >
                       {feature}
                     </span>

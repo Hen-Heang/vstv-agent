@@ -61,7 +61,7 @@ export default function AnimatedHeroSection() {
   }
 
   return (
-    <div className="relative bg-gradient-to-r from-brand-red-400 to-brand-red-600 text-white overflow-hidden">
+    <div className="relative bg-gradient-to-r from-brand-primary-600 to-brand-primary-800 text-white overflow-hidden">
       {/* Background Slides */}
       <div className="absolute inset-0">
         {heroSlides.map((slide, index) => (
@@ -79,27 +79,27 @@ export default function AnimatedHeroSection() {
       </div>
 
       {/* Slide Content */}
-      <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-2xl text-center">
           <div className="transition-all duration-500 transform">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl animate-in fade-in-50 slide-in-from-bottom-4">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-6xl animate-in fade-in-50 slide-in-from-bottom-4">
               {heroSlides[currentSlide].title}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-red-100 animate-in fade-in-50 slide-in-from-bottom-4 delay-200">
+            <p className="mt-4 text-base leading-7 sm:mt-6 sm:text-lg sm:leading-8 text-blue-100 animate-in fade-in-50 slide-in-from-bottom-4 delay-200">
               {heroSlides[currentSlide].subtitle}
             </p>
           </div>
           
-          <div className="mt-10 flex items-center justify-center gap-x-6 animate-in fade-in-50 slide-in-from-bottom-4 delay-300">
-            <Button size="lg" asChild>
-              <Link href="/properties" className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
-                {heroSlides[currentSlide].cta}
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:mt-10 sm:flex-row sm:gap-6 animate-in fade-in-50 slide-in-from-bottom-4 delay-300">
+            <Button size="lg" asChild className="w-full sm:w-auto">
+              <Link href="/properties" className="flex items-center justify-center gap-2">
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-sm sm:text-base">{heroSlides[currentSlide].cta}</span>
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-              <Link href="/contact" className="flex items-center gap-2">
-                Contact an Agent
+            <Button variant="outline" size="lg" asChild className="w-full sm:w-auto bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Link href="/contact" className="flex items-center justify-center gap-2">
+                <span className="text-sm sm:text-base">Contact an Agent</span>
               </Link>
             </Button>
           </div>
@@ -107,9 +107,9 @@ export default function AnimatedHeroSection() {
       </div>
 
       {/* Interactive Search Bar */}
-      <div className="relative -mt-16 mx-auto max-w-4xl px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-xl p-6 animate-in fade-in-50 slide-in-from-bottom-4 delay-500">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="relative -mt-8 mx-auto max-w-4xl px-4 sm:-mt-12 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 animate-in fade-in-50 slide-in-from-bottom-4 delay-500">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex items-center space-x-2">
               <Search className="h-5 w-5 text-gray-400" />
               <input
@@ -149,7 +149,7 @@ export default function AnimatedHeroSection() {
             </div>
           </div>
           <div className="mt-4">
-            <Button className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto text-sm sm:text-base">
               Search Properties
             </Button>
           </div>
@@ -157,22 +157,22 @@ export default function AnimatedHeroSection() {
       </div>
 
       {/* Slide Navigation */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 sm:gap-4 sm:bottom-8">
         {/* Previous/Next Buttons */}
         <button
           onClick={prevSlide}
           className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
         >
-          <ArrowRight className="h-4 w-4 rotate-180" />
+          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 rotate-180" />
         </button>
 
         {/* Slide Indicators */}
-        <div className="flex gap-2">
+        <div className="flex gap-1 sm:gap-2">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                 index === currentSlide ? 'bg-white' : 'bg-white/50 hover:bg-white/70'
               }`}
             />
@@ -184,18 +184,18 @@ export default function AnimatedHeroSection() {
           onClick={nextSlide}
           className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
         </button>
 
         {/* Auto-play Toggle */}
         <button
           onClick={toggleAutoPlay}
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors ml-4"
+          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors ml-2 sm:ml-4"
         >
           {isAutoPlaying ? (
-            <Pause className="h-4 w-4" />
+            <Pause className="h-3 w-3 sm:h-4 sm:w-4" />
           ) : (
-            <Play className="h-4 w-4" />
+            <Play className="h-3 w-3 sm:h-4 sm:w-4" />
           )}
         </button>
       </div>

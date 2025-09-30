@@ -16,7 +16,7 @@ interface ImageFile {
 }
 
 export default function ImageManager() {
-  const [images, setImages] = useState<ImageFile[]>([
+  const [images] = useState<ImageFile[]>([
     {
       name: 'luxury-condo-bkk1.jpg',
       path: '/images/properties/featured/luxury-condo-bkk1.jpg',

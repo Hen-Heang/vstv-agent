@@ -43,9 +43,9 @@ export default function PropertyComparison({
     return null
   }
 
-  const allFeatures = Array.from(
-    new Set(properties.flatMap(p => p.features))
-  )
+  // const allFeatures = Array.from(
+  //   new Set(properties.flatMap(p => p.features))
+  // )
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-40">

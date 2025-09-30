@@ -6,11 +6,12 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/cn'
-import { Menu, X, Phone, MessageCircle, ChevronDown } from 'lucide-react'
+import { Menu, X, Phone, MessageCircle } from 'lucide-react'
 
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Properties', href: '/properties' },
+  { name: 'Units', href: '/units' },
   { name: 'Our Services', href: '/services' },
   { name: 'Agents', href: '/agents' },
   { name: 'About', href: '/about' },
@@ -42,7 +43,7 @@ export default function Header() {
           <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98]">
             <span className="sr-only">VSTV Agent</span>
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-gold-50 via-brand-gold-100 to-brand-gold-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-gold-200/50 transition-all duration-300 ring-1 ring-brand-gold-200/50 group-hover:ring-brand-gold-300/70">
+              <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50 group-hover:ring-brand-secondary-300/70">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
                 <Image
                   src="/images/company/VSTV.png"
@@ -53,7 +54,7 @@ export default function Header() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-red-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
                 <span className="text-xs font-medium text-gray-500 group-hover:text-gray-600 -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
@@ -63,7 +64,7 @@ export default function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="relative inline-flex items-center justify-center rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-red-50 hover:text-brand-red-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-red-200/50 backdrop-blur-sm"
+            className="relative inline-flex items-center justify-center rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-primary-200/50 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
@@ -81,16 +82,16 @@ export default function Header() {
                 className={cn(
                   "relative px-3 py-2 text-sm font-semibold leading-6 transition-all duration-300 ease-out group whitespace-nowrap rounded-xl",
                   isActive 
-                    ? "text-brand-red-600 bg-brand-red-50/80 shadow-sm backdrop-blur-sm" 
-                    : "text-gray-700 hover:text-brand-red-600 hover:bg-brand-red-50/50 hover:backdrop-blur-sm hover:shadow-sm"
+                    ? "text-brand-primary-600 bg-brand-primary-50/80 shadow-sm backdrop-blur-sm" 
+                    : "text-gray-700 hover:text-brand-primary-600 hover:bg-brand-primary-50/50 hover:backdrop-blur-sm hover:shadow-sm"
                 )}
               >
                 <span className="relative z-10">{item.name}</span>
                 {isActive && (
-                  <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-brand-red-500 to-brand-red-600 rounded-full shadow-sm"></span>
+                  <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 rounded-full shadow-sm"></span>
                 )}
-                <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-brand-red-500 to-brand-red-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out shadow-sm"></span>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-red-500/5 to-brand-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out shadow-sm"></span>
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-primary-500/5 to-brand-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             )
           })}
@@ -101,7 +102,7 @@ export default function Header() {
             variant="outline" 
             size="sm" 
             asChild
-            className="relative border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-red-300/80 hover:text-brand-red-600 hover:bg-brand-red-50/80 transition-all duration-300 text-xs lg:text-sm shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-red-200/50 rounded-xl"
+            className="relative border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 text-xs lg:text-sm shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-primary-200/50 rounded-xl"
           >
             <Link href="tel:+85598261807" className="flex items-center gap-1.5 lg:gap-2">
               <Phone className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
@@ -112,7 +113,7 @@ export default function Header() {
           <Button 
             size="sm" 
             asChild
-            className="relative bg-gradient-to-r from-brand-red-500 to-brand-red-600 hover:from-brand-red-600 hover:to-brand-red-700 shadow-lg hover:shadow-xl hover:shadow-brand-red-500/25 transition-all duration-300 text-xs lg:text-sm font-semibold rounded-xl ring-1 ring-brand-red-500/20 hover:ring-brand-red-600/30 backdrop-blur-sm"
+            className="relative bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 hover:from-brand-primary-600 hover:to-brand-primary-700 shadow-lg hover:shadow-xl hover:shadow-brand-primary-500/25 transition-all duration-300 text-xs lg:text-sm font-semibold rounded-xl ring-1 ring-brand-primary-500/20 hover:ring-brand-primary-600/30 backdrop-blur-sm"
           >
             <Link href="https://t.me/vsv168cambodia" className="flex items-center gap-1.5 lg:gap-2">
               <MessageCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
@@ -131,7 +132,7 @@ export default function Header() {
             <Link href="/" className="flex items-center space-x-3 sm:space-x-4 group" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">VSTV Agent</span>
               <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-gold-50 via-brand-gold-100 to-brand-gold-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-gold-200/50 transition-all duration-300 ring-1 ring-brand-gold-200/50">
+                <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-60"></div>
                   <Image
                     src="/images/company/VSTV.png"
@@ -142,14 +143,14 @@ export default function Header() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-red-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
                   <span className="text-xs font-medium text-gray-500 -mt-0.5 tracking-wide uppercase">Real Estate</span>
                 </div>
               </div>
             </Link>
             <button
               type="button"
-              className="rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-red-50 hover:text-brand-red-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-red-200/50"
+              className="rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-primary-200/50"
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
@@ -167,8 +168,8 @@ export default function Header() {
                     className={cn(
                       "group block rounded-xl px-4 py-4 text-base font-semibold transition-all duration-300 relative overflow-hidden",
                       isActive 
-                        ? "bg-gradient-to-r from-brand-red-50 to-brand-red-50/80 text-brand-red-600 border-l-4 border-brand-red-500 shadow-sm ring-1 ring-brand-red-100" 
-                        : "text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-50/80 hover:text-brand-red-600 hover:shadow-sm hover:ring-1 hover:ring-gray-100"
+                        ? "bg-gradient-to-r from-brand-primary-50 to-brand-primary-50/80 text-brand-primary-600 border-l-4 border-brand-primary-500 shadow-sm ring-1 ring-brand-primary-100" 
+                        : "text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-50/80 hover:text-brand-primary-600 hover:shadow-sm hover:ring-1 hover:ring-gray-100"
                     )}
                     style={{ animationDelay: `${index * 50}ms` }}
                     onClick={() => setMobileMenuOpen(false)}
@@ -176,10 +177,10 @@ export default function Header() {
                     <div className="relative z-10 flex items-center justify-between">
                       <span>{item.name}</span>
                       {isActive && (
-                        <div className="w-2 h-2 rounded-full bg-brand-red-500 shadow-sm"></div>
+                        <div className="w-2 h-2 rounded-full bg-brand-primary-500 shadow-sm"></div>
                       )}
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-brand-red-500/5 to-brand-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-brand-primary-500/5 to-brand-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </Link>
                 )
               })}
@@ -187,7 +188,7 @@ export default function Header() {
             <div className="mt-8 pt-6 border-t border-gray-100/80 space-y-4">
               <Button 
                 variant="outline" 
-                className="w-full h-12 border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-red-300/80 hover:text-brand-red-600 hover:bg-brand-red-50/80 transition-all duration-300 shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-red-200/50 rounded-xl" 
+                className="w-full h-12 border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-primary-200/50 rounded-xl" 
                 asChild
               >
                 <Link href="tel:+85598261807" className="flex items-center justify-center gap-3">
@@ -196,7 +197,7 @@ export default function Header() {
                 </Link>
               </Button>
               <Button 
-                className="w-full h-12 bg-gradient-to-r from-brand-red-500 to-brand-red-600 hover:from-brand-red-600 hover:to-brand-red-700 shadow-lg hover:shadow-xl hover:shadow-brand-red-500/25 transition-all duration-300 font-semibold rounded-xl ring-1 ring-brand-red-500/20 hover:ring-brand-red-600/30" 
+                className="w-full h-12 bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 hover:from-brand-primary-600 hover:to-brand-primary-700 shadow-lg hover:shadow-xl hover:shadow-brand-primary-500/25 transition-all duration-300 font-semibold rounded-xl ring-1 ring-brand-primary-500/20 hover:ring-brand-primary-600/30" 
                 asChild
               >
                 <Link href="https://t.me/vsv168cambodia" className="flex items-center justify-center gap-3">

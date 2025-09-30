@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { MapPin, Bed, Bath, Square, Car, Wifi, Shield, Heart, Share2, Phone, MessageCircle } from 'lucide-react'
+import { MapPin, Bed, Bath, Square, Heart, Share2, Phone, MessageCircle } from 'lucide-react'
 
 // Mock data - in real app, this would come from database
 const mockProperty = {
@@ -47,7 +47,7 @@ interface PropertyDetailPageProps {
 }
 
 export async function generateMetadata({ params }: PropertyDetailPageProps) {
-  const { id } = await params
+  const { id: _propertyId } = await params
   const property = mockProperty // In real app, fetch from database
   
   return {
@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: PropertyDetailPageProps) {
 }
 
 export default async function PropertyDetailPage({ params }: PropertyDetailPageProps) {
-  const { id } = await params
+  const { id: _propertyId } = await params
   const property = mockProperty // In real app, fetch from database based on id
   
   if (!property) {

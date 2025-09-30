@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+// import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import PropertySearch from '@/components/properties/property-search'
 import InteractivePropertyCard from '@/components/properties/interactive-property-card'
 import InteractiveMap from '@/components/ui/interactive-map'
 import PropertyComparison from '@/components/properties/property-comparison'
-import { Grid, List, Map, Filter, Heart, Share2 } from 'lucide-react'
+import { Grid, List, Map, Heart } from 'lucide-react'
 
 interface Property {
   id: number
@@ -197,11 +197,11 @@ export default function EnhancedPropertiesPage() {
     )
   }
 
-  const handleAddToComparison = (property: Property) => {
-    if (comparisonProperties.length < 3 && !comparisonProperties.find(p => p.id === property.id)) {
-      setComparisonProperties(prev => [...prev, property])
-    }
-  }
+  // const handleAddToComparison = (property: Property) => {
+  //   if (comparisonProperties.length < 3 && !comparisonProperties.find(p => p.id === property.id)) {
+  //     setComparisonProperties(prev => [...prev, property])
+  //   }
+  // }
 
   const handleRemoveFromComparison = (propertyId: number) => {
     setComparisonProperties(prev => prev.filter(p => p.id !== propertyId))

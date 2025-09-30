@@ -8,7 +8,7 @@ type Service = Record<string, unknown>
 type ContactInquiry = Record<string, unknown>
 
 // Properties
-export async function getProperties(filters?: {
+export async function getProperties(_filters?: {
   property_type?: string
   listing_type?: string
   min_price?: number
@@ -20,7 +20,7 @@ export async function getProperties(filters?: {
   return [] as Property[]
 }
 
-export async function getPropertyById(id: string) {
+export async function getPropertyById(_id: string) {
   return null as Property | null
 }
 
@@ -33,7 +33,7 @@ export async function getAgents() {
   return [] as Agent[]
 }
 
-export async function getAgentById(id: string) {
+export async function getAgentById(_id: string) {
   return null as Agent | null
 }
 
@@ -56,12 +56,12 @@ export async function createContactInquiry(inquiry: {
 }
 
 // Property Views
-export async function trackPropertyView(propertyId: string, ipAddress?: string, userAgent?: string) {
+export async function trackPropertyView(propertyId: string, _ipAddress?: string, _userAgent?: string) {
   // Mock implementation
   console.log('Tracking property view:', propertyId)
 }
 
 // Search Properties
-export async function searchProperties(searchTerm: string) {
+export async function searchProperties(_searchTerm: string) {
   return [] as Property[]
 }
