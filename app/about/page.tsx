@@ -111,7 +111,7 @@ export default function AboutPage() {
             </div>
             <div className="relative order-1 lg:order-2">
               <Image
-                src="/images/company/CSTV-Cover-24-06-25.jpg"
+                src="/images/company/VSTV.png"
                 alt="VSTV Agent Office"
                 width={600}
                 height={400}
