@@ -10,7 +10,7 @@ const heroSlides = [
     id: 1,
     title: "Find Your Dream Condo & Apartment in Cambodia",
     subtitle: "Trusted real estate agent for rental & sales. Expert guidance for your property investment journey.",
-    backgroundImage: "/images/company/VSTV.png",
+    backgroundImage: "/images/company/VSTV-BG.png",
     cta: "View Properties"
   },
   {
@@ -61,24 +61,33 @@ export default function AnimatedHeroSection() {
   }
 
   return (
-    <div className="relative bg-gradient-to-r from-brand-primary-600 to-brand-primary-800 text-white overflow-hidden">
-      {/* Background Slides */}
-      <div className="absolute inset-0">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              backgroundImage: `url('${slide.backgroundImage}')`
-            }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>
+      <div className="relative bg-gradient-to-r from-black via-gray-900 to-yellow-700 text-white overflow-hidden">
 
-      {/* Slide Content */}
+
+      {/* Background Slides */}
+        <div className="absolute inset-0">
+          {heroSlides.map((slide, index) => (
+              <div
+                  key={slide.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                      index === currentSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    backgroundImage: `url('${slide.backgroundImage}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    width: '100%',
+                    height: '100%'
+                  }}
+              />
+          ))}
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+
+
+        {/* Slide Content */}
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-2xl text-center">
           <div className="transition-all duration-500 transform">

@@ -18,7 +18,13 @@ export async function GET(
       )
     }
 
-    return NextResponse.json(unit)
+    // Convert Decimal to number for JSON serialization
+    const serializedUnit = {
+      ...unit,
+      price: Number(unit.price)
+    }
+
+    return NextResponse.json(serializedUnit)
   } catch (error) {
     console.error('Error fetching unit:', error)
     return NextResponse.json(
@@ -57,7 +63,13 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(unit)
+    // Convert Decimal to number for JSON serialization
+    const serializedUnit = {
+      ...unit,
+      price: Number(unit.price)
+    }
+
+    return NextResponse.json(serializedUnit)
   } catch (error) {
     console.error('Error updating unit:', error)
     return NextResponse.json(

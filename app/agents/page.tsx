@@ -15,6 +15,7 @@ const fallbackAgents = [
     phone: "+855 96 4444 027",
     telegram: "0889832306",
     avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    background_image: "/images/company/VSTV-BG.png",
     bio: "With extensive experience in the Cambodian real estate market, Heng Kimhong specializes in luxury properties and investment opportunities. As a supervisor, he leads a team of dedicated agents and has helped hundreds of clients find their dream homes and maximize their investment returns.",
     experience_years: 8,
     specialties: ["Luxury Properties", "Investment Consulting", "Property Management", "Team Leadership"],
@@ -42,9 +43,10 @@ const fallbackAgents = [
     name: "HENG RITA",
     position: "Senior Real Estate Agent",
     email: "rytavsv168@gmail.com",
-    phone: "+855 98 261 808",
-    telegram: "098261808",
+    phone: "098-261-808",
+    telegram: "assistant_vstv168",
     avatar_url: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    background_image: "/images/company/VSTV-BG.png",
     bio: "Heng Rita is a senior real estate professional with deep knowledge of the Cambodian property market. She specializes in luxury residential properties and has built strong relationships with both local and international clients.",
     experience_years: 7,
     specialties: ["Luxury Residential", "International Clients", "Property Investment", "Market Trends"],
@@ -102,9 +104,10 @@ const fallbackAgents = [
     name: "OEURN CHET",
     position: "Real Estate Agent Supervisor",
     email: "chetvstv@gmail.com",
-    phone: "+855 98 261 807",
-    telegram: "098261807",
+    phone: "098-261-807",
+    telegram: "Salevstv007",
     avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    background_image: "/images/company/VSTV-BG.png",
     bio: "Oeurn Chet serves as a Real Estate Agent Supervisor, combining leadership skills with extensive property market knowledge. His supervisory role allows him to guide both clients and team members toward successful property transactions.",
     experience_years: 9,
     specialties: ["Team Leadership", "Luxury Properties", "Investment Consulting", "Client Management"],
@@ -173,8 +176,13 @@ export default async function AgentsPage() {
           {agents.map((agent) => (
             <Card key={agent.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white border-0 shadow-lg">
               {/* Agent Image Header */}
-              <div className="relative h-48 bg-gradient-to-br from-blue-600 to-blue-800">
-                <div className="absolute inset-0 bg-black/20"></div>
+              <div 
+                className="relative h-48 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `url('${agent.background_image || '/images/company/VSTV-BG.png'}')`,
+                }}
+              >
+                <div className="absolute inset-0 bg-black/40"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex items-center space-x-3">
                     <div className="relative">
