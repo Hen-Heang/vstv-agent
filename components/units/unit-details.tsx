@@ -3,7 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { X, Edit, Calendar, DollarSign, Home, User, FileText } from 'lucide-react'
+import { X, Edit, Calendar, DollarSign, Home, User, FileText, Clock, MapPin, Building } from 'lucide-react'
 
 interface Unit {
   id: string
@@ -13,6 +13,12 @@ interface Unit {
   handleBy: string
   remarks?: string
   status: string
+  availabilityInfo?: string
+  availabilityDate?: string
+  commissionRate?: number
+  specialConditions?: string[]
+  location?: string
+  floor?: string
   createdAt: string
   updatedAt: string
 }
@@ -132,6 +138,63 @@ export default function UnitDetails({ unit, onClose, onEdit }: UnitDetailsProps)
                 </div>
               </div>
             </div>
+
+            {/* Availability Information */}
+            {(unit.availabilityInfo || unit.availabilityDate || unit.commissionRate || unit.specialConditions?.length || unit.location || unit.floor) && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Availability Information</h3>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+                  {unit.availabilityInfo && (
+                    <div className="flex items-center text-blue-800">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Status: {unit.availabilityInfo}</span>
+                    </div>
+                  )}
+                  
+                  {unit.availabilityDate && (
+                    <div className="flex items-center text-blue-800">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Available: {new Date(unit.availabilityDate).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                  
+                  {unit.commissionRate && (
+                    <div className="flex items-center text-blue-800">
+                      <DollarSign className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Commission: {unit.commissionRate}%</span>
+                    </div>
+                  )}
+                  
+                  {unit.location && (
+                    <div className="flex items-center text-blue-800">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Location: {unit.location}</span>
+                    </div>
+                  )}
+                  
+                  {unit.floor && (
+                    <div className="flex items-center text-blue-800">
+                      <Building className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Floor: {unit.floor}</span>
+                    </div>
+                  )}
+                  
+                  {unit.specialConditions && unit.specialConditions.length > 0 && (
+                    <div>
+                      <div className="text-sm text-blue-700 font-medium mb-2">Special Conditions:</div>
+                      <div className="space-y-1">
+                        {unit.specialConditions.map((condition, index) => (
+                          <div key={index} className="flex items-center text-blue-800">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                            <span className="text-sm">{condition}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">

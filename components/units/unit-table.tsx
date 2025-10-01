@@ -14,6 +14,12 @@ interface Unit {
   handleBy: string
   remarks?: string
   status: string
+  availabilityInfo?: string
+  availabilityDate?: string
+  commissionRate?: number
+  specialConditions?: string[]
+  location?: string
+  floor?: string
   createdAt: string
   updatedAt: string
 }
@@ -154,6 +160,35 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 <p className="text-sm">{unit.remarks}</p>
               </div>
             )}
+
+            {/* Availability Information */}
+            {(unit.availabilityInfo || unit.availabilityDate || unit.commissionRate || unit.specialConditions?.length || unit.location || unit.floor) && (
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm text-gray-500 mb-2">Availability Information</p>
+                <div className="space-y-1">
+                  {unit.availabilityInfo && (
+                    <div className="text-blue-600 font-medium text-sm">{unit.availabilityInfo}</div>
+                  )}
+                  {unit.availabilityDate && (
+                    <div className="text-green-600 text-sm">Available: {new Date(unit.availabilityDate).toLocaleDateString()}</div>
+                  )}
+                  {unit.commissionRate && (
+                    <div className="text-orange-600 text-sm">Commission: {unit.commissionRate}%</div>
+                  )}
+                  {unit.location && (
+                    <div className="text-gray-500 text-sm">{unit.location}</div>
+                  )}
+                  {unit.floor && (
+                    <div className="text-gray-500 text-sm">{unit.floor}</div>
+                  )}
+                  {unit.specialConditions && unit.specialConditions.length > 0 && (
+                    <div className="text-xs text-gray-500">
+                      {unit.specialConditions.join(', ')}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
             
             <div className="flex space-x-2">
               <Button
@@ -239,6 +274,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 </div>
               </th>
               <th className="text-left py-3 px-4">Remarks</th>
+              <th className="text-left py-3 px-4">Availability</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
           </thead>
@@ -256,6 +292,31 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 </td>
                 <td className="py-3 px-4 text-sm text-gray-600 max-w-xs truncate">
                   {unit.remarks || '-'}
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-600 max-w-xs">
+                  <div className="space-y-1">
+                    {unit.availabilityInfo && (
+                      <div className="text-blue-600 font-medium">{unit.availabilityInfo}</div>
+                    )}
+                    {unit.availabilityDate && (
+                      <div className="text-green-600">Available: {new Date(unit.availabilityDate).toLocaleDateString()}</div>
+                    )}
+                    {unit.commissionRate && (
+                      <div className="text-orange-600">Commission: {unit.commissionRate}%</div>
+                    )}
+                    {unit.location && (
+                      <div className="text-gray-500">{unit.location}</div>
+                    )}
+                    {unit.floor && (
+                      <div className="text-gray-500">{unit.floor}</div>
+                    )}
+                    {unit.specialConditions && unit.specialConditions.length > 0 && (
+                      <div className="text-xs text-gray-500">
+                        {unit.specialConditions.slice(0, 2).join(', ')}
+                        {unit.specialConditions.length > 2 && ` +${unit.specialConditions.length - 2} more`}
+                      </div>
+                    )}
+                  </div>
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex space-x-2">

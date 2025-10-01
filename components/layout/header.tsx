@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/cn'
-import { Menu, X, Phone } from 'lucide-react'
+import { Icons } from '@/components/shared/icons'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -18,11 +18,6 @@ const navigation = [
   { name: 'Contact', href: '/contact' },
 ]
 
-const TelegramIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-  </svg>
-)
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -74,7 +69,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
-            <Menu className="h-6 w-6 transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
+            <Icons.Menu className="h-6 w-6 transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
           </button>
         </div>
         
@@ -103,7 +98,10 @@ export default function Header() {
           })}
         </div>
         
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-3">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-3 lg:items-center">
+          {/* Agent Image */}
+       
+          
           <Button 
             variant="outline" 
             size="sm" 
@@ -111,7 +109,7 @@ export default function Header() {
             className="relative border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 text-xs lg:text-sm shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-primary-200/50 rounded-xl"
           >
             <Link href="tel:+85598261807" className="flex items-center gap-1.5 lg:gap-2">
-              <Phone className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
+              <Icons.Phone className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
               <span className="hidden xl:inline">Call Us</span>
               <span className="xl:hidden">Call</span>
             </Link>
@@ -122,7 +120,7 @@ export default function Header() {
             className="relative bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 hover:from-brand-primary-600 hover:to-brand-primary-700 shadow-lg hover:shadow-xl hover:shadow-brand-primary-500/25 transition-all duration-300 text-xs lg:text-sm font-semibold rounded-xl ring-1 ring-brand-primary-500/20 hover:ring-brand-primary-600/30 backdrop-blur-sm"
           >
             <Link href="https://t.me/assistant_vstv168" className="flex items-center gap-1.5 lg:gap-2">
-              <TelegramIcon className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
+              <Icons.Telegram className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
               <span className="hidden xl:inline">Telegram</span>
               <span className="xl:hidden">TG</span>
             </Link>
@@ -160,7 +158,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
-              <X className="h-6 w-6" aria-hidden="true" />
+              <Icons.X className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
           <div className="flow-root">
@@ -198,7 +196,7 @@ export default function Header() {
                 asChild
               >
                 <Link href="tel:+85598261807" className="flex items-center justify-center gap-3">
-                  <Phone className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                  <Icons.Phone className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                   <span className="font-semibold">Call Us Now</span>
                 </Link>
               </Button>
@@ -207,7 +205,7 @@ export default function Header() {
                 asChild
               >
                 <Link href="https://t.me/assistant_vstv168" className="flex items-center justify-center gap-3">
-                  <TelegramIcon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                  <Icons.Telegram className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                   <span className="font-semibold">Contact on Telegram</span>
                 </Link>
               </Button>

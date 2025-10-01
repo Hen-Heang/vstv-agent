@@ -1,96 +1,94 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, CheckCircle, AlertCircle, Info } from 'lucide-react'
-import { cn } from '@/utils/cn'
+import { motion, AnimatePresence } from 'framer-motion'
+import { CheckCircle, AlertCircle, X, Info } from 'lucide-react'
 
 interface ToastProps {
   id: string
+  type: 'success' | 'error' | 'info'
   title: string
-  description?: string
-  type?: 'success' | 'error' | 'info' | 'warning'
+  message?: string
   duration?: number
   onClose: (id: string) => void
 }
 
-const toastIcons = {
-  success: CheckCircle,
-  error: AlertCircle,
-  info: Info,
-  warning: AlertCircle,
+const toastVariants = {
+  success: {
+    icon: CheckCircle,
+    className: 'bg-green-50 border-green-200 text-green-800',
+    iconClassName: 'text-green-600'
+  },
+  error: {
+    icon: AlertCircle,
+    className: 'bg-red-50 border-red-200 text-red-800',
+    iconClassName: 'text-red-600'
+  },
+  info: {
+    icon: Info,
+    className: 'bg-blue-50 border-blue-200 text-blue-800',
+    iconClassName: 'text-blue-600'
+  }
 }
 
-const toastStyles = {
-  success: 'bg-green-50 border-green-200 text-green-800',
-  error: 'bg-red-50 border-red-200 text-red-800',
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
-  warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-}
-
-export function Toast({ id, title, description, type = 'info', duration = 5000, onClose }: ToastProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isLeaving, setIsLeaving] = useState(false)
+export function Toast({ id, type, title, message, duration = 5000, onClose }: ToastProps) {
+  const [isVisible, setIsVisible] = useState(true)
+  const Icon = toastVariants[type].icon
 
   useEffect(() => {
-    setIsVisible(true)
-    
-    if (duration > 0) {
-      const timer = setTimeout(() => {
-        handleClose()
-      }, duration)
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+      setTimeout(() => onClose(id), 300) // Allow animation to complete
+    }, duration)
 
-      return () => clearTimeout(timer)
-    }
-  }, [duration])
+    return () => clearTimeout(timer)
+  }, [id, duration, onClose])
 
   const handleClose = () => {
-    setIsLeaving(true)
-    setTimeout(() => {
-      onClose(id)
-    }, 300)
+    setIsVisible(false)
+    setTimeout(() => onClose(id), 300)
   }
 
-  const Icon = toastIcons[type]
-
   return (
-    <div
-      className={cn(
-        'max-w-sm w-full border rounded-lg shadow-lg pointer-events-auto transition-all duration-300 transform',
-        isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0',
-        toastStyles[type]
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -50, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className={`relative max-w-sm w-full bg-white shadow-lg rounded-lg border pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden ${toastVariants[type].className}`}
+        >
+          <div className="p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <Icon className={`h-5 w-5 ${toastVariants[type].iconClassName}`} />
+              </div>
+              <div className="ml-3 w-0 flex-1">
+                <p className="text-sm font-medium">{title}</p>
+                {message && (
+                  <p className="mt-1 text-sm opacity-90">{message}</p>
+                )}
+              </div>
+              <div className="ml-4 flex-shrink-0 flex">
+                <button
+                  onClick={handleClose}
+                  className="inline-flex text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150"
+                  aria-label="Close notification"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       )}
-    >
-      <div className="p-4">
-        <div className="flex items-start">
-          <div className="flex-shrink-0">
-            <Icon className="h-5 w-5" />
-          </div>
-          <div className="ml-3 w-0 flex-1">
-            <p className="text-sm font-medium">{title}</p>
-            {description && (
-              <p className="mt-1 text-sm opacity-90">{description}</p>
-            )}
-          </div>
-          <div className="ml-4 flex-shrink-0 flex">
-            <button
-              onClick={handleClose}
-              className="inline-flex text-gray-400 hover:text-gray-600 focus:outline-none"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </AnimatePresence>
   )
 }
 
-interface ToastContainerProps {
-  toasts: ToastProps[]
-  onClose: (id: string) => void
-}
-
-export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
+// Toast Container Component
+export function ToastContainer({ toasts, onClose }: { toasts: ToastProps[], onClose: (id: string) => void }) {
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
       {toasts.map((toast) => (
@@ -100,44 +98,36 @@ export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
   )
 }
 
-// Hook for managing toasts
+// Toast Hook for easy usage
 export function useToast() {
   const [toasts, setToasts] = useState<ToastProps[]>([])
 
   const addToast = (toast: Omit<ToastProps, 'id' | 'onClose'>) => {
     const id = Math.random().toString(36).substr(2, 9)
-    const newToast = { ...toast, id, onClose: () => {} }
-    setToasts(prev => [...prev, newToast])
+    setToasts(prev => [...prev, { ...toast, id, onClose: removeToast }])
   }
 
   const removeToast = (id: string) => {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
-  const success = (title: string, description?: string) => {
-    addToast({ title, description, type: 'success' })
+  const success = (title: string, message?: string, duration?: number) => {
+    addToast({ type: 'success', title, message, duration })
   }
 
-  const error = (title: string, description?: string) => {
-    addToast({ title, description, type: 'error' })
+  const error = (title: string, message?: string, duration?: number) => {
+    addToast({ type: 'error', title, message, duration })
   }
 
-  const info = (title: string, description?: string) => {
-    addToast({ title, description, type: 'info' })
-  }
-
-  const warning = (title: string, description?: string) => {
-    addToast({ title, description, type: 'warning' })
+  const info = (title: string, message?: string, duration?: number) => {
+    addToast({ type: 'info', title, message, duration })
   }
 
   return {
     toasts,
-    addToast,
-    removeToast,
     success,
     error,
     info,
-    warning,
+    removeToast
   }
 }
-

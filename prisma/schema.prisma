@@ -28,6 +28,10 @@ model Property {
   features    String[] // Array of features like "pool", "gym", "parking"
   isFeatured  Boolean  @default(false)
   isAvailable Boolean  @default(true)
+  availabilityInfo String? // Additional availability information like "Available September", "Negotiate", "Sale-Commission: 4%"
+  availabilityDate DateTime? // Specific availability date
+  commissionRate Decimal? // Commission rate for sales
+  specialConditions String[] // Array of special conditions like "Exclude Management Fee", "Don't Receive Pets"
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -120,6 +124,12 @@ model Unit {
   handleBy    String   // Agent name like "Rita", "KA", "Sale006 VSTV"
   remarks     String?  // Additional notes like "Floor 5", "Available 18.08.2025", "Negotiate"
   status      String   @default("available") // "available", "sold", "rented", "negotiate"
+  availabilityInfo String? // Additional availability information like "Available September", "Negotiate", "Sale-Commission: 4%"
+  availabilityDate DateTime? // Specific availability date
+  commissionRate Decimal? // Commission rate for sales
+  specialConditions String[] // Array of special conditions like "Exclude Management Fee", "Don't Receive Pets"
+  location    String?  // Location information like "ChroyChongva", "Near TK Avenue"
+  floor       String?  // Floor information like "Floor 7", "Floor 5"
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

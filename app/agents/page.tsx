@@ -1,9 +1,14 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Phone, MessageCircle, Mail, MapPin } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Phone, MessageCircle, Mail, MapPin, Search, Filter, SortAsc, SortDesc } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useEffect, useState, useMemo } from 'react'
 
 // Fallback agents data for when database is not available
 const fallbackAgents = [
@@ -45,7 +50,7 @@ const fallbackAgents = [
     email: "rytavsv168@gmail.com",
     phone: "098-261-808",
     telegram: "assistant_vstv168",
-    avatar_url: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    avatar_url: "/images/agents/Heng-Rita.jpg",
     background_image: "/images/company/VSTV-BG.png",
     bio: "Heng Rita is a senior real estate professional with deep knowledge of the Cambodian property market. She specializes in luxury residential properties and has built strong relationships with both local and international clients.",
     experience_years: 7,
@@ -117,45 +122,116 @@ const fallbackAgents = [
   }
 ]
 
-export const metadata = {
-  title: 'Our Agents - VSTV Agent',
-  description: 'Meet our experienced real estate agents who can help you find your perfect property in Cambodia',
-}
 
+export default function AgentsPage() {
+  const [agents, setAgents] = useState(fallbackAgents)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState('position')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [filterSpecialty, setFilterSpecialty] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [agentsPerPage] = useState(6)
 
-export default async function AgentsPage() {
-  let agents = fallbackAgents
-  
-  try {
-    const { data: agentsData, error } = await supabase
-      .from('agents')
-      .select('*')
-      .eq('is_active', true)
-      .order('id', { ascending: true })
-    
-    if (!error && agentsData) {
-      agents = agentsData
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const { data: agentsData, error } = await supabase
+          .from('agents')
+          .select('*')
+          .eq('is_active', true)
+          .order('id', { ascending: true })
+        
+        if (!error && agentsData) {
+          setAgents(agentsData)
+        }
+      } catch (error) {
+        console.error('Error fetching agents:', error)
+        // Use fallback data
+      } finally {
+        setIsLoading(false)
+      }
     }
-  } catch (error) {
-    console.error('Error fetching agents:', error)
-    // Use fallback data
-  }
 
-  // Sort agents by position hierarchy
-  const positionOrder = {
-    'Real Estate Agent Manager': 1,
-    'Real Estate Agent Supervisor': 2,
-    'Senior Real Estate Agent': 3,
-    'Real Estate Agent': 4
-  }
+    fetchAgents()
+  }, [])
 
-  agents.sort((a, b) => {
-    const aOrder = positionOrder[a.position as keyof typeof positionOrder] || 5
-    const bOrder = positionOrder[b.position as keyof typeof positionOrder] || 5
-    return aOrder - bOrder
-  })
+  // Get unique specialties for filter
+  const allSpecialties = useMemo(() => {
+    const specialties = new Set<string>()
+    agents.forEach(agent => {
+      agent.specialties.forEach(specialty => specialties.add(specialty))
+    })
+    return Array.from(specialties).sort()
+  }, [agents])
+
+  // Filter and sort agents
+  const filteredAndSortedAgents = useMemo(() => {
+    const filtered = agents.filter(agent => {
+      const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          agent.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          agent.bio.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchesSpecialty = !filterSpecialty || agent.specialties.includes(filterSpecialty)
+      
+      return matchesSearch && matchesSpecialty
+    })
+
+    // Sort agents
+    filtered.sort((a, b) => {
+      let comparison = 0
+      
+      switch (sortBy) {
+        case 'position':
+          const positionOrder = {
+            'Real Estate Agent Manager': 1,
+            'Real Estate Agent Supervisor': 2,
+            'Senior Real Estate Agent': 3,
+            'Real Estate Agent': 4
+          }
+          const aOrder = positionOrder[a.position as keyof typeof positionOrder] || 5
+          const bOrder = positionOrder[b.position as keyof typeof positionOrder] || 5
+          comparison = aOrder - bOrder
+          break
+        case 'rating':
+          comparison = a.rating - b.rating
+          break
+        case 'experience':
+          comparison = a.experience_years - b.experience_years
+          break
+        case 'properties':
+          comparison = a.properties_sold - b.properties_sold
+          break
+        case 'name':
+          comparison = a.name.localeCompare(b.name)
+          break
+        default:
+          comparison = 0
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison
+    })
+
+    return filtered
+  }, [agents, searchTerm, sortBy, sortOrder, filterSpecialty])
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredAndSortedAgents.length / agentsPerPage)
+  const startIndex = (currentPage - 1) * agentsPerPage
+  const endIndex = startIndex + agentsPerPage
+  const paginatedAgents = filteredAndSortedAgents.slice(startIndex, endIndex)
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, sortBy, sortOrder, filterSpecialty])
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <Head>
+        <title>Our Agents - VSTV Agent</title>
+        <meta name="description" content="Meet our experienced real estate agents who can help you find your perfect property in Cambodia" />
+      </Head>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
@@ -171,39 +247,164 @@ export default async function AgentsPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+        {/* Search and Filter Section */}
+        <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Search agents..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            {/* Sort By */}
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-gray-400 flex-shrink-0" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+              >
+                <option value="position">Sort by Position</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="experience">Sort by Experience</option>
+                <option value="properties">Sort by Properties Sold</option>
+                <option value="name">Sort by Name</option>
+              </select>
+            </div>
+            
+            {/* Sort Order */}
+            <Button
+              variant="outline"
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="flex items-center space-x-2 text-sm sm:text-base"
+            >
+              {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+              <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
+              <span className="sm:hidden">{sortOrder === 'asc' ? 'Asc' : 'Desc'}</span>
+            </Button>
+            
+            {/* Specialty Filter */}
+            <select
+              value={filterSpecialty}
+              onChange={(e) => setFilterSpecialty(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+            >
+              <option value="">All Specialties</option>
+              {allSpecialties.map(specialty => (
+                <option key={specialty} value={specialty}>{specialty}</option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Results Count */}
+          <div className="mt-4 text-sm text-gray-600">
+            Showing {startIndex + 1}-{Math.min(endIndex, filteredAndSortedAgents.length)} of {filteredAndSortedAgents.length} agents
+            {searchTerm && ` matching "${searchTerm}"`}
+            {filterSpecialty && ` in ${filterSpecialty}`}
+            {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="overflow-hidden bg-white border-0 shadow-lg">
+                <div className="relative h-48 bg-gray-200 animate-pulse"></div>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-1">
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="text-right">
+                      <div className="h-6 w-12 bg-gray-200 rounded animate-pulse mb-1"></div>
+                      <div className="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mb-4">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
+                    <div className="text-center p-2 sm:p-3 bg-gray-100 rounded-lg">
+                      <div className="h-6 w-8 bg-gray-200 rounded animate-pulse mx-auto mb-1"></div>
+                      <div className="h-3 w-16 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                    </div>
+                    <div className="text-center p-2 sm:p-3 bg-gray-100 rounded-lg">
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse mx-auto mb-1"></div>
+                      <div className="h-3 w-16 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mb-4">
+                    <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="flex flex-wrap gap-1">
+                      <div className="h-6 w-16 bg-gray-200 rounded-full animate-pulse"></div>
+                      <div className="h-6 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+                      <div className="h-6 w-14 bg-gray-200 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="grid grid-cols-3 gap-1 sm:gap-2">
+                      <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
         {/* Agents Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent) => (
-            <Card key={agent.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white border-0 shadow-lg">
+        {!isLoading && (
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {paginatedAgents.map((agent) => (
+            <Card key={agent.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white border-0 shadow-lg hover:border-blue-200">
               {/* Agent Image Header */}
               <div 
-                className="relative h-48 bg-cover bg-center bg-no-repeat"
+                className="relative h-48 bg-cover bg-center bg-no-repeat overflow-hidden"
                 style={{
                   backgroundImage: `url('${agent.background_image || '/images/company/VSTV-BG.png'}')`,
                 }}
               >
-                <div className="absolute inset-0 bg-black/40"></div>
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex items-center space-x-3">
-                    <div className="relative">
+                    <div className="relative group-hover:scale-110 transition-transform duration-300">
                       <Image
                         src={agent.avatar_url}
                         alt={agent.name}
                         width={60}
                         height={60}
-                        className="rounded-full object-cover border-4 border-white shadow-lg"
+                        className="rounded-full object-cover border-4 border-white shadow-lg group-hover:shadow-xl transition-all duration-300"
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                       />
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white group-hover:bg-green-400 transition-colors duration-300"></div>
                     </div>
                     <div className="flex-1 text-white">
-                      <h3 className="font-bold text-lg">{agent.name}</h3>
-                      <p className="text-blue-100 text-sm">{agent.position}</p>
+                      <h3 className="font-bold text-lg group-hover:text-blue-100 transition-colors duration-300">{agent.name}</h3>
+                      <p className="text-blue-100 text-sm group-hover:text-blue-200 transition-colors duration-300">{agent.position}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 {/* Rating and Stats */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-1">
@@ -231,14 +432,14 @@ export default async function AgentsPage() {
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">{agent.bio}</p>
                 
                 {/* Experience and Location */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{agent.experience_years}</div>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
+                  <div className="text-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                    <div className="text-xl sm:text-2xl font-bold text-blue-600">{agent.experience_years}</div>
                     <div className="text-xs text-gray-500">Years Experience</div>
                   </div>
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="text-center p-2 sm:p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-center text-blue-600 mb-1">
-                      <MapPin className="h-4 w-4" />
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
                     </div>
                     <div className="text-xs text-gray-500">Phnom Penh</div>
                   </div>
@@ -266,33 +467,114 @@ export default async function AgentsPage() {
                 
                 {/* Action Buttons */}
                 <div className="space-y-2">
-                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Link href={`/agents/${agent.id}`}>
+                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 group-hover:bg-blue-700 transition-all duration-300 hover:scale-105 text-sm sm:text-base">
+                    <Link href={`/agents/${agent.id}`} className="flex items-center justify-center">
                       View Full Profile
                     </Link>
                   </Button>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50">
+                  <div className="grid grid-cols-3 gap-1 sm:gap-2">
+                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
                       <a href={`tel:${agent.phone}`} className="flex items-center justify-center">
-                        <Phone className="h-4 w-4" />
+                        <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
                       </a>
                     </Button>
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50">
+                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
                       <a href={`https://t.me/${agent.telegram}`} className="flex items-center justify-center">
-                        <MessageCircle className="h-4 w-4" />
+                        <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
                       </a>
                     </Button>
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50">
+                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
                       <a href={`mailto:${agent.email}`} className="flex items-center justify-center">
-                        <Mail className="h-4 w-4" />
+                        <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
                       </a>
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!isLoading && totalPages > 1 && (
+          <div className="mt-8 sm:mt-12 flex justify-center">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="hover:bg-blue-50 text-sm px-3 py-2"
+              >
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Prev</span>
+              </Button>
+              
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let page;
+                  if (totalPages <= 5) {
+                    page = i + 1;
+                  } else if (currentPage <= 3) {
+                    page = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    page = totalPages - 4 + i;
+                  } else {
+                    page = currentPage - 2 + i;
+                  }
+                  return (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-8 h-8 sm:w-10 sm:h-10 text-sm ${
+                        currentPage === page 
+                          ? 'bg-blue-600 text-white' 
+                          : 'hover:bg-blue-50'
+                      }`}
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="hover:bg-blue-50 text-sm px-3 py-2"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <span className="sm:hidden">Next</span>
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* No Results */}
+        {!isLoading && filteredAndSortedAgents.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-500 text-lg mb-4">No agents found</div>
+            <p className="text-gray-400 mb-6">
+              {searchTerm || filterSpecialty 
+                ? 'Try adjusting your search criteria or filters'
+                : 'No agents are currently available'
+              }
+            </p>
+            {(searchTerm || filterSpecialty) && (
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setSearchTerm('')
+                  setFilterSpecialty('')
+                }}
+              >
+                Clear Filters
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* Team Stats */}
         <div className="mt-24 bg-white rounded-2xl shadow-sm">
@@ -353,7 +635,8 @@ export default async function AgentsPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
