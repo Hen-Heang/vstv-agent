@@ -39,7 +39,7 @@ export default function Header() {
         ? "bg-white/90 backdrop-blur-xl shadow-xl shadow-gray-900/5 border-b border-white/20" 
         : "bg-white/95 backdrop-blur-sm shadow-md shadow-gray-900/10"
     )}>
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8 lg:py-4" aria-label="Global">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-8 lg:py-4" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98]">
             <span className="sr-only">VSTV Agent</span>
@@ -55,7 +55,7 @@ export default function Header() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
                 <span className="text-xs font-medium text-gray-500 group-hover:text-gray-600 -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function Header() {
       {/* Mobile menu */}
       <div className={cn("lg:hidden", mobileMenuOpen ? "block" : "hidden")}>
         <div className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-md transition-all duration-300" onClick={() => setMobileMenuOpen(false)} />
-        <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white/95 backdrop-blur-xl px-4 py-6 sm:px-6 sm:max-w-sm shadow-2xl shadow-gray-900/20 border-l border-white/20">
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm overflow-y-auto bg-white/95 backdrop-blur-xl px-3 py-4 sm:px-6 sm:py-6 shadow-2xl shadow-gray-900/20 border-l border-white/20">
           <div className="flex items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-gray-100/80">
             <Link href="/" className="flex items-center space-x-3 sm:space-x-4 group" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">VSTV Agent</span>

@@ -149,7 +149,7 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="relative z-10 flex items-center min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-3 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <AnimatePresence mode="wait">
               <motion.div
@@ -159,10 +159,10 @@ export default function HeroSection() {
                 exit={{ opacity: 0, y: -50 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                   {heroSlides[currentSlide].title}
                 </h1>
-                <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
                   {heroSlides[currentSlide].subtitle}
                 </p>
               </motion.div>
@@ -173,12 +173,12 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4"
             >
               <Button
                 size="lg"
                 asChild
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
               >
                 <Link 
                   href={heroSlides[currentSlide].title === "Meet Our Expert Agents" ? "/agents" : "/properties"} 
@@ -193,7 +193,7 @@ export default function HeroSection() {
                 variant="outline"
                 size="lg"
                 asChild
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105 w-full sm:w-auto"
               >
                 <Link 
                   href={heroSlides[currentSlide].title === "Meet Our Expert Agents" ? "/agents/008" : "/contact"} 

@@ -72,7 +72,7 @@ export default function Footer() {
         Footer
       </h2>
       
-      <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-24 xl:pt-32">
+      <div className="relative mx-auto max-w-7xl px-3 pb-6 pt-8 sm:px-4 sm:pb-8 sm:pt-12 lg:px-8 lg:pt-24 xl:pt-32">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -88,8 +88,8 @@ export default function Footer() {
             viewport={{ once: true }}
             className="space-y-6 sm:space-y-8"
           >
-            <div className="flex items-center space-x-3 sm:space-x-4 group">
-              <div className="relative h-10 w-16 sm:h-12 sm:w-20 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-2 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50 group-hover:ring-brand-secondary-300/70">
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 group">
+              <div className="relative h-8 w-12 sm:h-10 sm:w-16 md:h-12 md:w-20 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-1.5 sm:p-2 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50 group-hover:ring-brand-secondary-300/70">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
                 <Image
                   src="/images/company/VSTV.png"
@@ -100,7 +100,7 @@ export default function Footer() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-bold text-white group-hover:text-brand-primary-300 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-base sm:text-lg md:text-xl font-bold text-white group-hover:text-brand-primary-300 transition-colors duration-300 tracking-tight">VSTV Agent</span>
                 <span className="text-xs font-medium text-gray-400 group-hover:text-gray-300 -mt-0.5 tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function Footer() {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="text-sm leading-6 text-gray-300 max-w-md"
+              className="text-xs sm:text-sm leading-5 sm:leading-6 text-gray-300 max-w-md"
             >
               Your trusted real estate partner in Cambodia. We help you find your dream property with expert guidance and personalized service.
             </motion.p>
@@ -120,7 +120,7 @@ export default function Footer() {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
-              className="flex space-x-4 sm:space-x-6"
+              className="flex space-x-3 sm:space-x-4 md:space-x-6"
             >
               {navigation.social.map((item, index) => (
                 <motion.div
@@ -134,12 +134,12 @@ export default function Footer() {
                 >
                   <Link 
                     href={item.href} 
-                    className={`inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-gray-400 ${item.color} transition-all duration-300 hover:border-brand-primary-500/50 hover:bg-brand-primary-500/10 hover:shadow-lg hover:shadow-brand-primary-500/20`}
+                    className={`inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-gray-400 ${item.color} transition-all duration-300 hover:border-brand-primary-500/50 hover:bg-brand-primary-500/10 hover:shadow-lg hover:shadow-brand-primary-500/20`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                   <span className="sr-only">{item.name}</span>
-                    <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <item.icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                 </Link>
                 </motion.div>
               ))}
