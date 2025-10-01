@@ -55,8 +55,8 @@ export default function Header() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
-                <span className="text-xs font-medium text-gray-500 group-hover:text-gray-600 -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
+                <span className="text-base sm:text-lg lg:text-xl font-bold text-brand-text-primary group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-xs font-medium text-brand-text-secondary group-hover:text-brand-text-primary -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
           </Link>
@@ -65,7 +65,7 @@ export default function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="relative inline-flex items-center justify-center rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-primary-200/50 backdrop-blur-sm"
+            className="relative inline-flex items-center justify-center rounded-xl p-2.5 text-brand-text-primary bg-brand-neutral-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-brand-neutral-200/50 hover:ring-brand-primary-200/50 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
@@ -84,7 +84,7 @@ export default function Header() {
                   "relative px-3 py-2 text-sm font-semibold leading-6 transition-all duration-300 ease-out group whitespace-nowrap rounded-xl",
                   isActive 
                     ? "text-brand-primary-600 bg-brand-primary-50/80 shadow-sm backdrop-blur-sm" 
-                    : "text-gray-700 hover:text-brand-primary-600 hover:bg-brand-primary-50/50 hover:backdrop-blur-sm hover:shadow-sm"
+                    : "text-brand-text-primary hover:text-brand-primary-600 hover:bg-brand-primary-50/50 hover:backdrop-blur-sm hover:shadow-sm"
                 )}
               >
                 <span className="relative z-10">{item.name}</span>
@@ -130,8 +130,8 @@ export default function Header() {
       
       {/* Mobile menu */}
       <div className={cn("lg:hidden", mobileMenuOpen ? "block" : "hidden")}>
-        <div className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-md transition-all duration-300" onClick={() => setMobileMenuOpen(false)} />
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm overflow-y-auto bg-white/95 backdrop-blur-xl px-3 py-4 sm:px-6 sm:py-6 shadow-2xl shadow-gray-900/20 border-l border-white/20">
+        <div className="fixed inset-0 z-50 bg-brand-secondary-900/40 backdrop-blur-md transition-all duration-300" onClick={() => setMobileMenuOpen(false)} />
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm overflow-y-auto bg-white/95 backdrop-blur-xl px-3 py-4 sm:px-6 sm:py-6 shadow-2xl shadow-brand-secondary-900/20 border-l border-white/20">
           <div className="flex items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-gray-100/80">
             <Link href="/" className="flex items-center space-x-3 sm:space-x-4 group" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">VSTV Agent</span>
@@ -147,14 +147,14 @@ export default function Header() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
-                  <span className="text-xs font-medium text-gray-500 -mt-0.5 tracking-wide uppercase">Real Estate</span>
+                <span className="text-lg sm:text-xl font-bold text-brand-text-primary group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-xs font-medium text-brand-text-secondary -mt-0.5 tracking-wide uppercase">Real Estate</span>
                 </div>
               </div>
             </Link>
             <button
               type="button"
-              className="rounded-xl p-2.5 text-gray-700 bg-gray-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-gray-200/50 hover:ring-brand-primary-200/50"
+              className="rounded-xl p-2.5 text-brand-text-primary bg-brand-neutral-50/80 hover:bg-brand-primary-50 hover:text-brand-primary-600 transition-all duration-300 shadow-sm hover:shadow-md ring-1 ring-brand-neutral-200/50 hover:ring-brand-primary-200/50"
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
@@ -173,7 +173,7 @@ export default function Header() {
                       "group block rounded-xl px-4 py-4 text-base font-semibold transition-all duration-300 relative overflow-hidden",
                       isActive 
                         ? "bg-gradient-to-r from-brand-primary-50 to-brand-primary-50/80 text-brand-primary-600 border-l-4 border-brand-primary-500 shadow-sm ring-1 ring-brand-primary-100" 
-                        : "text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-50/80 hover:text-brand-primary-600 hover:shadow-sm hover:ring-1 hover:ring-gray-100"
+                        : "text-brand-text-primary hover:bg-gradient-to-r hover:from-brand-neutral-50 hover:to-brand-neutral-50/80 hover:text-brand-primary-600 hover:shadow-sm hover:ring-1 hover:ring-brand-neutral-100"
                     )}
                     style={{ animationDelay: `${index * 50}ms` }}
                     onClick={() => setMobileMenuOpen(false)}
@@ -192,7 +192,7 @@ export default function Header() {
             <div className="mt-8 pt-6 border-t border-gray-100/80 space-y-4">
               <Button 
                 variant="outline" 
-                className="w-full h-12 border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-primary-200/50 rounded-xl" 
+                className="w-full h-12 border-brand-neutral-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 shadow-sm hover:shadow-md font-semibold ring-1 ring-brand-neutral-200/20 hover:ring-brand-primary-200/50 rounded-xl" 
                 asChild
               >
                 <Link href="tel:+85598261807" className="flex items-center justify-center gap-3">

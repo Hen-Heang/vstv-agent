@@ -162,7 +162,7 @@ export default function HeroSection() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                   {heroSlides[currentSlide].title}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-brand-neutral-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
                   {heroSlides[currentSlide].subtitle}
                 </p>
               </motion.div>
@@ -178,7 +178,7 @@ export default function HeroSection() {
               <Button
                 size="lg"
                 asChild
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
               >
                 <Link 
                   href={heroSlides[currentSlide].title === "Meet Our Expert Agents" ? "/agents" : "/properties"} 
