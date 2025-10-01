@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Reusable UI patterns and common component utilities
  */
