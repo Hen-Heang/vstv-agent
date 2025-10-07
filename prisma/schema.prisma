@@ -136,3 +136,42 @@ model Unit {
   
   @@map("units")
 }
+
+model HeroSlide {
+  id            String   @id @default(cuid())
+  title         String
+  subtitle      String
+  backgroundImage String
+  cta           String
+  ctaSecondary  String
+  ctaLink       String?  // Link for primary CTA
+  ctaSecondaryLink String? // Link for secondary CTA
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("hero_slides")
+}
+
+model CompanyInfo {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  logo        String?  // Logo image URL
+  backgroundImage String? // Background image URL
+  mission     String?
+  vision      String?
+  values      String[] // Array of company values
+  address     String?
+  phone       String?
+  email       String?
+  website     String?
+  socialMedia Json?    // Social media links
+  stats       Json?    // Company statistics
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("company_info")
+}

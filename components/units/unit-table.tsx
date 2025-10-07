@@ -112,13 +112,13 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
               placeholder="Search units..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64 min-h-[44px] text-base"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] text-base"
           >
             <option value="all">All Status</option>
             <option value="available">Available</option>
@@ -195,7 +195,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 variant="outline"
                 size="sm"
                 onClick={() => onView(unit)}
-                className="text-blue-600 hover:text-blue-700 flex-1"
+                className="text-blue-600 hover:text-blue-700 flex-1 min-h-[44px] text-base"
               >
                 <Eye className="h-4 w-4 mr-1" />
                 View
@@ -204,7 +204,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 variant="outline"
                 size="sm"
                 onClick={() => onEdit(unit)}
-                className="text-green-600 hover:text-green-700 flex-1"
+                className="text-green-600 hover:text-green-700 flex-1 min-h-[44px] text-base"
               >
                 <Edit className="h-4 w-4 mr-1" />
                 Edit
@@ -213,7 +213,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                 variant="outline"
                 size="sm"
                 onClick={() => onDelete(unit.id)}
-                className="text-red-600 hover:text-red-700 flex-1"
+                className="text-red-600 hover:text-red-700 flex-1 min-h-[44px] text-base"
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 Delete

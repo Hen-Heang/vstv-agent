@@ -11,14 +11,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'),
-  title: "VSTV AGENT (CAMBODIA) CO., LTD - Find Your Dream Property in Cambodia",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  title: "VSTV Agent",
   description: "VSTV AGENT (CAMBODIA) CO., LTD - Your trusted real estate partner for property sales and rentals in Cambodia. Expert guidance for apartments, condos, villas, and land investments.",
   keywords: "VSTV Agent, real estate, Cambodia, property, apartment, condo, villa, land, sales, rental, Phnom Penh, real estate agent Cambodia",
   authors: [{ name: "VSTV AGENT (CAMBODIA) CO., LTD" }],
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/images/company/VSTV.png",
+    apple: "/images/company/VSTV.png",
   },
   openGraph: {
     title: "VSTV AGENT (CAMBODIA) CO., LTD - Find Your Dream Property in Cambodia",

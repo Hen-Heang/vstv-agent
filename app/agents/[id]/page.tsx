@@ -1,4 +1,4 @@
-// import { notFound } from 'next/navigation'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,7 +12,6 @@ const TelegramIcon = ({ className }: { className?: string }) => (
 )
 import { supabase } from '@/lib/supabase'
 
-// Fallback agents data for when database is not available
 const fallbackAgents = {
   "004": {
     id: "004",
@@ -171,9 +170,9 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="bg-white border-b">
-        <div className="mx-auto max-w-7xl px-6 py-4 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-3 sm:py-4 lg:px-8">
           <nav className="flex" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-4">
+            <ol className="flex items-center space-x-2 sm:space-x-4 text-sm">
               <li>
                 <Link href="/" className="text-gray-400 hover:text-gray-500">
                   Home
@@ -181,7 +180,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </li>
               <li>
                 <div className="flex items-center">
-                  <span className="text-gray-400 mx-2">/</span>
+                  <span className="text-gray-400 mx-1 sm:mx-2">/</span>
                   <Link href="/agents" className="text-gray-400 hover:text-gray-500">
                     Agents
                   </Link>
@@ -189,8 +188,8 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </li>
               <li>
                 <div className="flex items-center">
-                  <span className="text-gray-400 mx-2">/</span>
-                  <span className="text-gray-900 font-medium">{agent.name}</span>
+                  <span className="text-gray-400 mx-1 sm:mx-2">/</span>
+                  <span className="text-gray-900 font-medium truncate">{agent.name}</span>
                 </div>
               </li>
             </ol>
@@ -198,47 +197,47 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 lg:px-8">
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Agent Profile */}
             <Card className="mb-8">
               <CardHeader>
-                <div className="flex items-start space-x-6">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                   <Image
                     src={agent.avatar_url}
                     alt={agent.name}
                     width={120}
                     height={120}
-                    className="rounded-full object-cover"
+                    className="rounded-full object-cover flex-shrink-0"
                   />
-                  <div className="flex-1">
-                    <CardTitle className="text-3xl font-bold text-gray-900 mb-2">
+                  <div className="flex-1 text-center sm:text-left">
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                       {agent.name}
                     </CardTitle>
-                    <p className="text-xl text-blue-600 font-medium mb-2">{agent.position}</p>
+                    <p className="text-lg sm:text-xl text-blue-600 font-medium mb-2">{agent.position}</p>
                     <p className="text-sm text-gray-600 mb-4">Agent ID: {agent.id}</p>
                     
-                    <div className="flex items-center mb-4">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-center mb-4 space-y-2 sm:space-y-0">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-5 w-5 ${
+                            className={`h-4 w-4 sm:h-5 sm:w-5 ${
                               i < Math.floor(agent.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                             }`}
                           />
                         ))}
-                        <span className="ml-2 text-sm text-gray-600">
+                        <span className="ml-2 text-xs sm:text-sm text-gray-600">
                           {agent.rating} ({agent.properties_sold} properties sold)
                         </span>
                       </div>
                     </div>
                     
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-5 w-5 mr-2" />
-                      <span>Phnom Penh</span>
+                    <div className="flex items-center justify-center sm:justify-start text-gray-600">
+                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                      <span className="text-sm sm:text-base">Phnom Penh</span>
                     </div>
                   </div>
                 </div>
@@ -256,20 +255,20 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                 <CardTitle>Experience & Qualifications</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">Experience</h4>
                     <div className="space-y-2">
                       <div className="flex items-center">
-                        <Award className="h-4 w-4 text-blue-600 mr-2" />
+                        <Award className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0" />
                         <span className="text-sm text-gray-600">{agent.experience_years} years in real estate</span>
                       </div>
                       <div className="flex items-center">
-                        <Calendar className="h-4 w-4 text-blue-600 mr-2" />
+                        <Calendar className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0" />
                         <span className="text-sm text-gray-600">Joined VSTV Agent in {new Date(agent.created_at).getFullYear()}</span>
                       </div>
                       <div className="flex items-center">
-                        <Star className="h-4 w-4 text-blue-600 mr-2" />
+                        <Star className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0" />
                         <span className="text-sm text-gray-600">{agent.properties_sold} properties sold</span>
                       </div>
                     </div>
@@ -280,8 +279,8 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <div className="space-y-2">
                       <p className="text-sm text-gray-600">{agent.education}</p>
                       {agent.certifications.map((cert, index) => (
-                        <div key={index} className="flex items-center">
-                          <Award className="h-4 w-4 text-blue-600 mr-2" />
+                        <div key={index} className="flex items-start">
+                          <Award className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
                           <span className="text-sm text-gray-600">{cert}</span>
                         </div>
                       ))}
@@ -297,11 +296,11 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                 <CardTitle>Specialties</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {agent.specialties.map((specialty, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <div className="h-2 w-2 bg-blue-600 rounded-full"></div>
-                      <span className="text-gray-700">{specialty}</span>
+                      <div className="h-2 w-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-sm sm:text-base text-gray-700">{specialty}</span>
                     </div>
                   ))}
                 </div>
@@ -358,8 +357,8 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {mockProperties.map((property) => (
-                    <Link key={property.id} href={`/properties/${property.id}`} className="group">
-                      <div className="relative h-48 mb-3">
+                    <Link key={property.id} href={`/properties/${property.id}`} className="group block">
+                      <div className="relative h-40 sm:h-48 mb-3">
                         <Image
                           src={property.image}
                           alt={property.title}
@@ -367,11 +366,11 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                           className="object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <h4 className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
                         {property.title}
                       </h4>
-                      <p className="text-sm text-gray-600">{property.location}</p>
-                      <p className="text-sm font-medium text-blue-600">
+                      <p className="text-xs sm:text-sm text-gray-600 mb-1">{property.location}</p>
+                      <p className="text-xs sm:text-sm font-medium text-blue-600">
                         {property.priceType === 'rent' ? `$${property.price}/month` : `$${property.price.toLocaleString()}`}
                       </p>
                     </Link>

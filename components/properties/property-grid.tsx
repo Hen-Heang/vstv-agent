@@ -1,116 +1,143 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Bed, Bath, Square, Heart } from 'lucide-react'
 
-const mockProperties = [
-  {
-    id: 1,
-    title: "Luxury Condo in BKK1",
-    price: 1200,
-    priceType: "rent",
-    location: "BKK1, Phnom Penh",
-    bedrooms: 2,
-    bathrooms: 2,
-    area: 85,
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["Pool", "Gym", "Parking"],
-    agent: {
-      name: "John Doe",
-      phone: "+855 12 345 6789"
-    }
-  },
-  {
-    id: 2,
-    title: "Modern Apartment in Toul Kork",
-    price: 800,
-    priceType: "rent",
-    location: "Toul Kork, Phnom Penh",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 65,
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["Balcony", "Security"],
-    agent: {
-      name: "Jane Smith",
-      phone: "+855 12 345 6789"
-    }
-  },
-  {
-    id: 3,
-    title: "Premium Villa for Sale",
-    price: 250000,
-    priceType: "sale",
-    location: "Sen Sok, Phnom Penh",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 200,
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["Garden", "Garage", "Pool"],
-    agent: {
-      name: "Mike Johnson",
-      phone: "+855 12 345 6789"
-    }
-  },
-  {
-    id: 4,
-    title: "Cozy Studio in City Center",
-    price: 500,
-    priceType: "rent",
-    location: "City Center, Phnom Penh",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 45,
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["Furnished", "WiFi"],
-    agent: {
-      name: "Sarah Wilson",
-      phone: "+855 12 345 6789"
-    }
-  },
-  {
-    id: 5,
-    title: "Spacious Family House",
-    price: 180000,
-    priceType: "sale",
-    location: "Chroy Changvar, Phnom Penh",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 150,
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["Garden", "Parking", "Security"],
-    agent: {
-      name: "David Brown",
-      phone: "+855 12 345 6789"
-    }
-  },
-  {
-    id: 6,
-    title: "High-End Condo with River View",
-    price: 2000,
-    priceType: "rent",
-    location: "Tonle Bassac, Phnom Penh",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 120,
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    features: ["River View", "Pool", "Gym", "Concierge"],
-    agent: {
-      name: "Lisa Chen",
-      phone: "+855 12 345 6789"
-    }
+interface Property {
+  id: string
+  title: string
+  price: number
+  priceType: string
+  location: string
+  bedrooms: number | null
+  bathrooms: number | null
+  area: number | null
+  images: string[]
+  features: string[]
+  agent?: {
+    id: string
+    name: string
+    phone: string | null
+    avatar: string | null
   }
-]
+}
 
 export default function PropertyGrid() {
+  const [properties, setProperties] = useState<Property[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch('/api/properties')
+        if (response.ok) {
+          const data = await response.json()
+          setProperties(data)
+        } else {
+          // Fallback to static properties
+          console.log('Using fallback properties')
+          setProperties([
+            {
+              id: 'property-1',
+              title: 'Luxury Condo in BKK1',
+              price: 1200,
+              priceType: 'rent',
+              location: 'BKK1, Phnom Penh',
+              bedrooms: 2,
+              bathrooms: 2,
+              area: 85,
+              images: ['/images/properties/featured/luxury-condo-bkk1.jpg'],
+              features: ['Pool', 'Gym', 'Parking'],
+              agent: {
+                id: 'agent-1',
+                name: 'HENG KIMHONG',
+                phone: '+855 96 4444 027',
+                avatar: '/images/agents/heng-kimhong.html'
+              }
+            },
+            {
+              id: 'property-2',
+              title: 'Modern Apartment in Toul Kork',
+              price: 800,
+              priceType: 'rent',
+              location: 'Toul Kork, Phnom Penh',
+              bedrooms: 1,
+              bathrooms: 1,
+              area: 65,
+              images: ['/images/properties/featured/modern-apartment-toul-kork.jpg'],
+              features: ['Balcony', 'Security'],
+              agent: {
+                id: 'agent-2',
+                name: 'VIN SOLYVAY',
+                phone: '+855 98 261 801',
+                avatar: '/images/agents/vin-solyvay.html'
+              }
+            },
+            {
+              id: 'property-3',
+              title: 'Premium Villa for Sale',
+              price: 250000,
+              priceType: 'sale',
+              location: 'Sen Sok, Phnom Penh',
+              bedrooms: 4,
+              bathrooms: 3,
+              area: 200,
+              images: ['/images/properties/featured/premium-villa-sen-sok.jpg'],
+              features: ['Garden', 'Garage', 'Pool'],
+              agent: {
+                id: 'agent-3',
+                name: 'HENG RITA',
+                phone: '+855 12 345 6789',
+                avatar: '/images/agents/Heng-Rita.jpg'
+              }
+            }
+          ])
+        }
+      } catch (error) {
+        console.error('Error fetching properties:', error)
+        // Use fallback data
+        setProperties([
+          {
+            id: 'property-1',
+            title: 'Luxury Condo in BKK1',
+            price: 1200,
+            priceType: 'rent',
+            location: 'BKK1, Phnom Penh',
+            bedrooms: 2,
+            bathrooms: 2,
+            area: 85,
+            images: ['/images/properties/featured/luxury-condo-bkk1.jpg'],
+            features: ['Pool', 'Gym', 'Parking']
+          }
+        ])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProperties()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading properties...</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       {/* Results Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            {mockProperties.length} Properties Found
+            {properties.length} Properties Found
           </h2>
           <p className="text-gray-600">Showing all available properties</p>
         </div>
@@ -125,12 +152,17 @@ export default function PropertyGrid() {
       </div>
 
       {/* Properties Grid */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-        {mockProperties.map((property) => (
+      {properties.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No properties available at the moment.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+          {properties.map((property) => (
           <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
             <div className="relative h-64">
               <Image
-                src={property.image}
+                src={property.images[0] || '/images/placeholders/property-placeholder.jpg'}
                 alt={property.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -160,18 +192,24 @@ export default function PropertyGrid() {
               </div>
               
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                <div className="flex items-center">
-                  <Bed className="h-4 w-4 mr-1" />
-                  <span>{property.bedrooms}</span>
-                </div>
-                <div className="flex items-center">
-                  <Bath className="h-4 w-4 mr-1" />
-                  <span>{property.bathrooms}</span>
-                </div>
-                <div className="flex items-center">
-                  <Square className="h-4 w-4 mr-1" />
-                  <span>{property.area}m²</span>
-                </div>
+                {property.bedrooms && (
+                  <div className="flex items-center">
+                    <Bed className="h-4 w-4 mr-1" />
+                    <span>{property.bedrooms}</span>
+                  </div>
+                )}
+                {property.bathrooms && (
+                  <div className="flex items-center">
+                    <Bath className="h-4 w-4 mr-1" />
+                    <span>{property.bathrooms}</span>
+                  </div>
+                )}
+                {property.area && (
+                  <div className="flex items-center">
+                    <Square className="h-4 w-4 mr-1" />
+                    <span>{property.area}m²</span>
+                  </div>
+                )}
               </div>
               
               <div className="flex flex-wrap gap-1 mb-4">
@@ -189,9 +227,11 @@ export default function PropertyGrid() {
                 <div className="text-2xl font-bold text-gray-900">
                   {property.priceType === 'rent' ? `$${property.price}/month` : `$${property.price.toLocaleString()}`}
                 </div>
-                <div className="text-sm text-gray-500">
-                  Agent: {property.agent.name}
-                </div>
+                {property.agent && (
+                  <div className="text-sm text-gray-500">
+                    Agent: {property.agent.name}
+                  </div>
+                )}
               </div>
             </CardContent>
             
@@ -204,7 +244,8 @@ export default function PropertyGrid() {
             </CardFooter>
           </Card>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Pagination */}
       <div className="mt-12 flex items-center justify-center">

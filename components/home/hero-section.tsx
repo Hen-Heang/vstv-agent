@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,57 +11,94 @@ import {
   Star
 } from 'lucide-react'
 
-const heroSlides = [
-  {
-    id: 1,
-    title: "Find Your Dream Property in Cambodia",
-    subtitle: "Discover premium condos, luxury apartments, and exclusive villas in Cambodia's most desirable locations with expert guidance.",
-    backgroundImage: "/images/company/VSTV-BG.png",
-    cta: "Explore Properties",
-    ctaSecondary: "Contact Agent"
-  },
-  {
-    id: 2,
-    title: "Premium Properties in Prime Locations",
-    subtitle: "From BKK1 luxury condos to Sen Sok family homes, find your perfect property with Cambodia's trusted real estate experts.",
-    backgroundImage: "/images/properties/featured/luxury-condo-bkk1.jpg",
-    cta: "View Listings",
-    ctaSecondary: "Schedule Tour"
-  },
-  {
-    id: 3,
-    title: "Meet Our Expert Agents",
-    subtitle: "Professional real estate agents with extensive experience in the Cambodian market. Let our experts guide you to your perfect property.",
-    backgroundImage: "/images/agents/Heng-Rita.jpg",
-    cta: "Meet Our Agents",
-    ctaSecondary: "Contact Agent"
-  },
-  {
-    id: 4,
-    title: "Smart Real Estate Investments",
-    subtitle: "Maximize your returns with strategic property investments. Expert guidance for both local and international investors.",
-    backgroundImage: "/images/properties/featured/premium-villa-sen-sok.jpg",
-    cta: "Investment Guide",
-    ctaSecondary: "Free Consultation"
-  },
-  {
-    id: 5,
-    title: "VSTV Agent - Your Trusted Partner",
-    subtitle: "Leading real estate agency in Cambodia with years of experience helping clients find their perfect properties.",
-    backgroundImage: "/images/company/VSTV-BG.png",
-    cta: "About Us",
-    ctaSecondary: "Our Services"
-  }
-]
+interface HeroSlide {
+  id: string
+  title: string
+  subtitle: string
+  backgroundImage: string
+  cta: string
+  ctaSecondary: string
+  ctaLink?: string
+  ctaSecondaryLink?: string
+}
 
 export default function HeroSection() {
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([])
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fetch hero slides from API with fallback
+  useEffect(() => {
+    const fetchHeroSlides = async () => {
+      try {
+        const response = await fetch('/api/hero-slides')
+        if (response.ok) {
+          const slides = await response.json()
+          setHeroSlides(slides)
+        } else {
+          // Fallback to static data if API fails
+          console.log('Using fallback hero slides')
+          setHeroSlides([
+            {
+              id: '1',
+              title: "Find Your Dream Property in Cambodia",
+              subtitle: "Discover premium condos, luxury apartments, and exclusive villas in Cambodia's most desirable locations with expert guidance.",
+              backgroundImage: "/images/company/VSTV-BG.png",
+              cta: "Explore Properties",
+              ctaSecondary: "Contact Agent",
+              ctaLink: "/properties",
+              ctaSecondaryLink: "/contact"
+            },
+            {
+              id: '2',
+              title: "Premium Properties in Prime Locations",
+              subtitle: "From BKK1 luxury condos to Sen Sok family homes, find your perfect property with Cambodia's trusted real estate experts.",
+              backgroundImage: "/images/properties/featured/luxury-condo-bkk1.jpg",
+              cta: "View Listings",
+              ctaSecondary: "Schedule Tour",
+              ctaLink: "/properties",
+              ctaSecondaryLink: "/contact"
+            },
+            {
+              id: '3',
+              title: "Meet Our Expert Agents",
+              subtitle: "Professional real estate agents with extensive experience in the Cambodian market. Let our experts guide you to your perfect property.",
+              backgroundImage: "/images/agents/Heng-Rita.jpg",
+              cta: "Meet Our Agents",
+              ctaSecondary: "Contact Agent",
+              ctaLink: "/agents",
+              ctaSecondaryLink: "/agents/008"
+            }
+          ])
+        }
+      } catch (error) {
+        console.error('Error fetching hero slides:', error)
+        // Use fallback data
+        setHeroSlides([
+          {
+            id: '1',
+            title: "Find Your Dream Property in Cambodia",
+            subtitle: "Discover premium condos, luxury apartments, and exclusive villas in Cambodia's most desirable locations with expert guidance.",
+            backgroundImage: "/images/company/VSTV-BG.png",
+            cta: "Explore Properties",
+            ctaSecondary: "Contact Agent",
+            ctaLink: "/properties",
+            ctaSecondaryLink: "/contact"
+          }
+        ])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchHeroSlides()
+  }, [])
 
   // Auto-advance slides with progress tracking
   useEffect(() => {
-    if (!isAutoPlaying) {
+    if (!isAutoPlaying || heroSlides.length === 0) {
       setProgress(0)
       return
     }
@@ -83,18 +120,24 @@ export default function HeroSection() {
     }, interval)
 
     return () => clearInterval(progressInterval)
-  }, [isAutoPlaying, currentSlide])
+  }, [isAutoPlaying, currentSlide, heroSlides.length])
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-  }
+  const nextSlide = useCallback(() => {
+    if (heroSlides.length > 0) {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+    }
+  }, [heroSlides.length])
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
-  }
+  const prevSlide = useCallback(() => {
+    if (heroSlides.length > 0) {
+      setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+    }
+  }, [heroSlides.length])
 
   const goToSlide = (index: number) => {
-    setCurrentSlide(index)
+    if (index >= 0 && index < heroSlides.length) {
+      setCurrentSlide(index)
+    }
   }
 
   // Keyboard navigation
@@ -112,7 +155,31 @@ export default function HeroSection() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isAutoPlaying])
+  }, [isAutoPlaying, nextSlide, prevSlide])
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <section className="relative min-h-screen overflow-hidden bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </section>
+    )
+  }
+
+  // Show empty state if no slides
+  if (heroSlides.length === 0) {
+    return (
+      <section className="relative min-h-screen overflow-hidden bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to VSTV Agent</h1>
+          <p className="text-gray-600">Your trusted real estate partner in Cambodia</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section 
@@ -149,7 +216,7 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="relative z-10 flex items-center min-h-screen">
-        <div className="container mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <AnimatePresence mode="wait">
               <motion.div
@@ -159,10 +226,10 @@ export default function HeroSection() {
                 exit={{ opacity: 0, y: -50 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight px-2 text-balance">
                   {heroSlides[currentSlide].title}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-brand-neutral-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-brand-neutral-200 mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed px-4 text-balance">
                   {heroSlides[currentSlide].subtitle}
                 </p>
               </motion.div>
@@ -173,34 +240,34 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-6 sm:mb-8 md:mb-12 px-4"
             >
               <Button
                 size="lg"
                 asChild
-                className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[48px] touch-manipulation"
               >
                 <Link 
-                  href={heroSlides[currentSlide].title === "Meet Our Expert Agents" ? "/agents" : "/properties"} 
-                  className="flex items-center gap-2"
+                  href={heroSlides[currentSlide].ctaLink || "/properties"} 
+                  className="flex items-center justify-center gap-2"
                 >
-                  <Search className="h-5 w-5" />
-                  {heroSlides[currentSlide].cta}
-                  <ArrowRight className="h-5 w-5" />
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">{heroSlides[currentSlide].cta}</span>
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Link>
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 asChild
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[48px] touch-manipulation"
               >
                 <Link 
-                  href={heroSlides[currentSlide].title === "Meet Our Expert Agents" ? "/agents/008" : "/contact"} 
-                  className="flex items-center gap-2"
+                  href={heroSlides[currentSlide].ctaSecondaryLink || "/contact"} 
+                  className="flex items-center justify-center gap-2"
                 >
-                  <Star className="h-5 w-5" />
-                  {heroSlides[currentSlide].ctaSecondary}
+                  <Star className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">{heroSlides[currentSlide].ctaSecondary}</span>
                 </Link>
               </Button>
             </motion.div>
@@ -209,33 +276,33 @@ export default function HeroSection() {
       </div>
 
       {/* Slide Navigation */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4 z-30">
+      <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 sm:gap-4 z-30 px-4">
         {/* Previous Button */}
         <button
           onClick={prevSlide}
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm"
+          className="p-2 sm:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px]"
           aria-label="Previous slide"
         >
-          <ArrowRight className="h-4 w-4 rotate-180 text-white" />
+          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 rotate-180 text-white" />
         </button>
 
         {/* Slide Indicators */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className="relative w-3 h-3 rounded-full transition-all duration-300 group"
+              className="relative w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 group"
               aria-label={`Go to slide ${index + 1}`}
             >
-              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                 index === currentSlide 
                   ? 'bg-white scale-125' 
                   : 'bg-white/50 hover:bg-white/70'
               }`} />
               {index === currentSlide && isAutoPlaying && (
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-white"
+                  className="absolute inset-0 rounded-full border border-white"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: progress / 100 }}
                   transition={{ duration: 0.1 }}
@@ -249,16 +316,16 @@ export default function HeroSection() {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm"
+          className="p-2 sm:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px]"
           aria-label="Next slide"
         >
-          <ArrowRight className="h-4 w-4 text-white" />
+          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
         </button>
 
         {/* Auto-play Toggle */}
         <button
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm ml-2"
+          className="p-2 sm:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm ml-1 sm:ml-2 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px]"
           aria-label={isAutoPlaying ? "Pause slideshow" : "Play slideshow"}
         >
           {isAutoPlaying ? (
@@ -266,24 +333,24 @@ export default function HeroSection() {
               animate={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full" />
             </motion.div>
           ) : (
-            <ArrowRight className="h-4 w-4 text-white" />
+            <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
           )}
         </button>
       </div>
 
       {/* Properties Counter */}
-      <div className="absolute top-8 right-8 z-30">
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 1 }}
-          className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20"
+          className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20"
         >
-          <div className="text-sm text-blue-100 mb-1">Properties Available</div>
-          <div className="text-2xl font-bold text-white">1,247</div>
+          <div className="text-xs sm:text-sm text-blue-100 mb-1">Properties Available</div>
+          <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">1,247</div>
           <div className="text-xs text-blue-200">Updated daily</div>
         </motion.div>
       </div>

@@ -164,7 +164,7 @@ export default function ContactForm({
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, () => document.getElementById('email')?.focus())}
-                className={`pl-10 ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
+                className={`pl-10 min-h-[48px] text-base ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
                 placeholder="Enter your full name"
                 disabled={isSubmitting}
                 aria-describedby={errors.name ? 'name-error' : undefined}
@@ -198,7 +198,7 @@ export default function ContactForm({
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, () => document.getElementById('phone')?.focus())}
-                className={`pl-10 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
+                className={`pl-10 min-h-[48px] text-base ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
                 placeholder="Enter your email address"
                 disabled={isSubmitting}
                 aria-describedby={errors.email ? 'email-error' : undefined}
@@ -232,7 +232,7 @@ export default function ContactForm({
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, () => document.getElementById('message')?.focus())}
-                className={`pl-10 ${errors.phone ? 'border-red-500 focus:ring-red-500' : ''}`}
+                className={`pl-10 min-h-[48px] text-base ${errors.phone ? 'border-red-500 focus:ring-red-500' : ''}`}
                 placeholder="Enter your phone number"
                 disabled={isSubmitting}
                 aria-describedby={errors.phone ? 'phone-error' : undefined}
@@ -264,7 +264,7 @@ export default function ContactForm({
                 id="message"
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
+                className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none min-h-[120px] text-base ${
                   errors.message ? 'border-red-500 focus:ring-red-500' : ''
                 }`}
                 rows={4}
@@ -303,7 +303,7 @@ export default function ContactForm({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 min-h-[48px] text-base"
             >
               {isSubmitting ? (
                 <>

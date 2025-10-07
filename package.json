@@ -13,6 +13,11 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx lib/seed.ts",
+    "db:seed:complete": "tsx lib/seed-complete.ts",
+    "db:seed:working": "tsx lib/seed-working.ts",
+    "db:seed:supabase": "tsx lib/seed-supabase.ts",
+    "db:seed:supabase-direct": "tsx lib/seed-supabase-direct.ts",
+    "db:migrate-and-seed": "node scripts/migrate-and-seed.js",
     "db:studio": "prisma studio"
   },
   "dependencies": {

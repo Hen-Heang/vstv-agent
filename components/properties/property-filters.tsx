@@ -37,14 +37,14 @@ export default function PropertyFilters() {
   }
 
   return (
-    <Card className="sticky top-24">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
           <Search className="h-5 w-5" />
           Filters
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6">
         {/* Price Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -113,14 +113,14 @@ export default function PropertyFilters() {
               placeholder="Min"
               value={filters.minPrice}
               onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[44px]"
             />
             <input
               type="number"
               placeholder="Max"
               value={filters.maxPrice}
               onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[44px]"
             />
           </div>
         </div>
@@ -174,24 +174,24 @@ export default function PropertyFilters() {
               placeholder="Min"
               value={filters.minArea}
               onChange={(e) => handleFilterChange('minArea', e.target.value)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[44px]"
             />
             <input
               type="number"
               placeholder="Max"
               value={filters.maxArea}
               onChange={(e) => handleFilterChange('maxArea', e.target.value)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[44px]"
             />
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="space-y-2">
-          <Button className="w-full">
+        <div className="space-y-2 pt-2">
+          <Button className="w-full min-h-[48px] text-base">
             Apply Filters
           </Button>
-          <Button variant="outline" className="w-full" onClick={clearFilters}>
+          <Button variant="outline" className="w-full min-h-[48px] text-base" onClick={clearFilters}>
             Clear All
           </Button>
         </div>
