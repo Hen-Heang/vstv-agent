@@ -30,7 +30,7 @@ const navigation = {
     },
     {
       name: 'Facebook',
-      href: 'https://facebook.com/vstvagent',
+      href: 'https://www.facebook.com/share/1BL2cw4au3/?mibextid=wwXIfr',
       icon: Icons.Facebook,
       color: 'hover:text-blue-500'
     },

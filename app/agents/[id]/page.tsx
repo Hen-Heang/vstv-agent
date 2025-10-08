@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Phone, Mail, MapPin, Award, Calendar, Star } from 'lucide-react'
+import AgentDetailActions from '@/components/agents/agent-detail-actions'
 
 const TelegramIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -11,6 +12,7 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 import { supabase } from '@/lib/supabase'
+import type { Agent, SupabaseAgent } from '@/types/agent'
 
 const fallbackAgents = {
   "004": {
@@ -148,9 +150,14 @@ export async function generateMetadata({ params }: AgentDetailPageProps) {
 export default async function AgentDetailPage({ params }: AgentDetailPageProps) {
   const { id } = await params
   
-  let agent = fallbackAgents[id as keyof typeof fallbackAgents] || fallbackAgents["004"]
+  let agent: Agent | null = null
   
   try {
+    if (!supabase) {
+      console.error('Supabase client not configured. Please set up environment variables.')
+      throw new Error('Supabase not configured')
+    }
+
     const { data: agentData, error } = await supabase
       .from('agents')
       .select('*')
@@ -158,12 +165,68 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
       .eq('is_active', true)
       .single()
     
-    if (!error && agentData) {
-      agent = agentData
+    if (error) {
+      console.error('Error fetching agent:', error)
+      throw new Error(`Agent not found: ${error.message}`)
+    }
+
+    if (!agentData) {
+      throw new Error('Agent not found')
+    }
+
+    // Transform data to match frontend expectations
+    const agentDataTyped = agentData as SupabaseAgent
+    agent = {
+      id: agentDataTyped.id,
+      name: agentDataTyped.name,
+      email: agentDataTyped.email,
+      phone: agentDataTyped.phone || '',
+      telegram: agentDataTyped.telegram || '',
+      position: agentDataTyped.position || '',
+      bio: agentDataTyped.bio || '',
+      avatar_url: agentDataTyped.avatar_url || '',
+      background_image: agentDataTyped.background_image || '/images/company/VSTV-BG.png',
+      specialties: agentDataTyped.specialties || [],
+      languages: agentDataTyped.languages || [],
+      experience_years: agentDataTyped.experience_years || 0,
+      properties_sold: agentDataTyped.properties_sold || 0,
+      rating: agentDataTyped.rating || 0,
+      education: agentDataTyped.education || '',
+      certifications: agentDataTyped.certifications || [],
+      achievements: agentDataTyped.achievements || [],
+      location: agentDataTyped.location || 'Phnom Penh',
+      is_active: agentDataTyped.is_active,
+      created_at: agentDataTyped.created_at,
+      updated_at: agentDataTyped.updated_at
     }
   } catch (error) {
     console.error('Error fetching agent:', error)
-    // Use fallback data
+    // Return 404 page instead of fallback data
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Agent Not Found</h1>
+          <p className="text-gray-600 mb-8">The agent you're looking for doesn't exist or has been removed.</p>
+          <Link href="/agents" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            Back to Agents
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (!agent) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Agent Not Found</h1>
+          <p className="text-gray-600 mb-8">The agent you're looking for doesn't exist or has been removed.</p>
+          <Link href="/agents" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            Back to Agents
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -198,6 +261,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 lg:px-8">
+        <AgentDetailActions agent={agent} />
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
@@ -265,7 +329,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                       </div>
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0" />
-                        <span className="text-sm text-gray-600">Joined VSTV Agent in {new Date(agent.created_at).getFullYear()}</span>
+                        <span className="text-sm text-gray-600">Joined VSTV Agent in {agent.created_at ? new Date(agent.created_at).getFullYear() : '2016'}</span>
                       </div>
                       <div className="flex items-center">
                         <Star className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0" />
@@ -277,8 +341,8 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">Education & Certifications</h4>
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600">{agent.education}</p>
-                      {agent.certifications.map((cert, index) => (
+                      <p className="text-sm text-gray-600">{agent.education || 'Not specified'}</p>
+                      {agent.certifications && agent.certifications.map((cert, index) => (
                         <div key={index} className="flex items-start">
                           <Award className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
                           <span className="text-sm text-gray-600">{cert}</span>
@@ -297,7 +361,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {agent.specialties.map((specialty, index) => (
+                  {agent.specialties && agent.specialties.map((specialty, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <div className="h-2 w-2 bg-blue-600 rounded-full flex-shrink-0"></div>
                       <span className="text-sm sm:text-base text-gray-700">{specialty}</span>
@@ -314,7 +378,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {agent.achievements.map((achievement, index) => (
+                  {agent.achievements && agent.achievements.map((achievement, index) => (
                     <div key={index} className="flex items-center space-x-3">
                       <Award className="h-5 w-5 text-yellow-500" />
                       <span className="text-gray-700">{achievement}</span>
@@ -457,7 +521,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {agent.languages.map((language, index) => (
+                  {agent.languages && agent.languages.map((language, index) => (
                     <span
                       key={index}
                       className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full"

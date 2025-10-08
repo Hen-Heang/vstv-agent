@@ -1,43 +1,36 @@
-console.log('🚀 Agent Database Setup Summary');
-console.log('');
+#!/usr/bin/env node
 
-console.log('✅ What has been completed:');
-console.log('  • Updated Prisma schema with comprehensive Agent model');
-console.log('  • Created Supabase-based API routes for agents');
-console.log('  • Updated agent pages to use database instead of mock data');
-console.log('  • Created seeding script for agent data');
-console.log('  • Added all 7 agents with real information from ID cards');
-console.log('');
+console.log('🚀 Supabase Agents Setup Instructions\n');
 
-console.log('📋 Agent Data Structure:');
-console.log('  • Agent ID (004, 003, 008, 009, 0010, 005, 007)');
-console.log('  • Name, Position, Email, Phone, Telegram');
-console.log('  • Bio, Experience, Specialties, Languages');
-console.log('  • Properties Sold, Rating, Location');
-console.log('  • Education, Certifications, Achievements');
+console.log('📋 Step-by-Step Setup:');
 console.log('');
-
-console.log('🔧 Next Steps:');
-console.log('  1. Configure Supabase environment variables:');
-console.log('     - NEXT_PUBLIC_SUPABASE_URL');
-console.log('     - NEXT_PUBLIC_SUPABASE_ANON_KEY');
-console.log('  2. Run: npx tsx lib/seed-agents-supabase.ts');
-console.log('  3. Test agent pages at /agents');
+console.log('1. 🌐 Create Supabase Project:');
+console.log('   • Go to https://supabase.com');
+console.log('   • Sign up/Login and create a new project');
+console.log('   • Wait for project to be ready (2-3 minutes)');
 console.log('');
-
-console.log('💡 Benefits of Database Approach:');
-console.log('  • Easy to update agent information');
-console.log('  • Centralized data management');
-console.log('  • API endpoints for CRUD operations');
-console.log('  • Better scalability and maintainability');
+console.log('2. 🔑 Get Your Credentials:');
+console.log('   • Go to Settings → API in your Supabase dashboard');
+console.log('   • Copy Project URL and Anon Key');
 console.log('');
-
-console.log('🎯 Agent Management Features:');
-console.log('  • GET /api/agents - List all agents');
-console.log('  • GET /api/agents?agentId=004 - Get specific agent');
-console.log('  • POST /api/agents - Create new agent');
-console.log('  • PUT /api/agents?agentId=004 - Update agent');
-console.log('  • DELETE /api/agents?agentId=004 - Delete agent');
+console.log('3. ⚙️ Set Environment Variables:');
+console.log('   • Create/update .env.local file:');
+console.log('   • NEXT_PUBLIC_SUPABASE_URL=your_project_url');
+console.log('   • NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key');
 console.log('');
-
-console.log('✨ All agent data is now ready for database storage!');
+console.log('4. 🗄️ Create Database Schema:');
+console.log('   • Go to SQL Editor in Supabase dashboard');
+console.log('   • Copy contents of supabase-agents-schema.sql');
+console.log('   • Paste and run the SQL');
+console.log('');
+console.log('5. 🌱 Seed the Database:');
+console.log('   • Run: npm run seed:agents');
+console.log('');
+console.log('6. ✅ Test the Setup:');
+console.log('   • Run: npm run dev');
+console.log('   • Visit /agents to see your agents!');
+console.log('');
+console.log('🎉 You\'ll have dynamic agent management!');
+console.log('   • Create, update, delete agents');
+console.log('   • Real-time data from Supabase');
+console.log('   • No more static data!');

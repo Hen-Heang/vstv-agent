@@ -1,28 +1,30 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/database'
+import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   try {
-    const properties = await prisma.property.findMany({
-      where: {
-        isAvailable: true
-      },
-      include: {
-        agent: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            avatar: true
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    })
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase client not configured. Please set up environment variables.' },
+        { status: 503 }
+      )
+    }
 
-    return NextResponse.json(properties)
+    const { data: properties, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('is_available', true)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching properties:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch properties from database' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json(properties || [])
   } catch (error) {
     console.error('Error fetching properties:', error)
     return NextResponse.json(
@@ -34,6 +36,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase client not configured. Please set up environment variables.' },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     
     const {
@@ -68,41 +77,41 @@ export async function POST(request: Request) {
       )
     }
 
-    const property = await prisma.property.create({
-      data: {
+    const { data: property, error } = await supabase
+      .from('properties')
+      .insert({
         title,
-        description,
+        description: description || null,
         price: Number(price),
-        priceType,
-        propertyType,
+        price_type: priceType,
+        property_type: propertyType,
         bedrooms: bedrooms ? Number(bedrooms) : null,
         bathrooms: bathrooms ? Number(bathrooms) : null,
         area: area ? Number(area) : null,
         location,
-        address,
+        address: address || null,
         latitude: latitude ? Number(latitude) : null,
         longitude: longitude ? Number(longitude) : null,
         images: images || [],
         features: features || [],
-        isFeatured: Boolean(isFeatured),
-        isAvailable: Boolean(isAvailable),
-        availabilityInfo,
-        availabilityDate: availabilityDate ? new Date(availabilityDate) : null,
-        commissionRate: commissionRate ? Number(commissionRate) : null,
-        specialConditions: specialConditions || [],
-        agentId
-      },
-      include: {
-        agent: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            avatar: true
-          }
-        }
-      }
-    })
+        is_featured: Boolean(isFeatured),
+        is_available: Boolean(isAvailable),
+        availability_info: availabilityInfo || null,
+        availability_date: availabilityDate ? new Date(availabilityDate).toISOString() : null,
+        commission_rate: commissionRate ? Number(commissionRate) : null,
+        special_conditions: specialConditions || [],
+        agent_id: agentId
+      } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+      .select('*')
+      .single()
+
+    if (error) {
+      console.error('Error creating property:', error)
+      return NextResponse.json(
+        { error: 'Failed to create property in database' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json(property, { status: 201 })
   } catch (error) {

@@ -3,11 +3,12 @@ import { prisma } from '@/lib/database'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const property = await prisma.property.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         agent: {
           select: {
@@ -45,9 +46,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     
     const {
@@ -84,7 +86,7 @@ export async function PUT(
 
     // Check if property exists
     const existingProperty = await prisma.property.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingProperty) {
@@ -95,7 +97,7 @@ export async function PUT(
     }
 
     const property = await prisma.property.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -143,12 +145,13 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     // Check if property exists
     const existingProperty = await prisma.property.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingProperty) {
@@ -159,7 +162,7 @@ export async function DELETE(
     }
 
     await prisma.property.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json(

@@ -60,7 +60,8 @@ export default function ContactPage() {
         "Street/Road No. 32 St. Lu Uy, 13",
         "Kroal Kor Village, Sangkat Kilometre 6",
         "Khan Russei Keo, Phnom Penh, Cambodia"
-      ]
+      ],
+      mapLink: "https://maps.app.goo.gl/rkj7PY3CVgcUsB5p6"
     },
     {
       icon: Phone,
@@ -258,6 +259,17 @@ export default function ContactPage() {
                               {detail}
                             </p>
                           ))}
+                          {info.mapLink && (
+                            <a
+                              href={info.mapLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mt-2"
+                            >
+                              <MapPin className="h-4 w-4 mr-1" />
+                              View on Google Maps
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -275,15 +287,28 @@ export default function ContactPage() {
               <CardTitle>Find Us on the Map</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-                  <p className="text-gray-600">Interactive Map</p>
-                  <p className="text-sm text-gray-500">Google Maps integration would go here</p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Street 123, Building ABC, Phnom Penh, Cambodia
-                  </p>
-                </div>
+              <div className="h-96 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.5!2d104.9282!3d11.5564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310951add5e2e81b%3A0x171e0b69c7c6b7bd!2sTV-TOWER1!5e0!3m2!1sen!2skh!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="VSTV Office Location"
+                />
+              </div>
+              <div className="mt-4 text-center">
+                <a
+                  href="https://maps.app.goo.gl/rkj7PY3CVgcUsB5p6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  <MapPin className="h-4 w-4 mr-1" />
+                  Open in Google Maps
+                </a>
               </div>
             </CardContent>
           </Card>

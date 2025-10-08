@@ -8,123 +8,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Phone, MessageCircle, Mail, MapPin, Search, Filter, SortAsc, SortDesc } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import type { Agent, SupabaseAgent } from '@/types/agent'
 import { useEffect, useState, useMemo } from 'react'
 
-// Fallback agents data for when database is not available
-const fallbackAgents = [
-  {
-    id: "004",
-    name: "HENG KIMHONG",
-    position: "Real Estate Agent Supervisor",
-    email: "hengkimhong1803@email.com",
-    phone: "+855 96 4444 027",
-    telegram: "0889832306",
-    avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    background_image: "/images/company/VSTV-BG.png",
-    bio: "With extensive experience in the Cambodian real estate market, Heng Kimhong specializes in luxury properties and investment opportunities. As a supervisor, he leads a team of dedicated agents and has helped hundreds of clients find their dream homes and maximize their investment returns.",
-    experience_years: 8,
-    specialties: ["Luxury Properties", "Investment Consulting", "Property Management", "Team Leadership"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 180,
-    rating: 4.9
-  },
-  {
-    id: "003",
-    name: "VIN SOLYVAY",
-    position: "Real Estate Agent",
-    email: "vinsolyvay@gmail.com",
-    phone: "+855 98 261 801",
-    telegram: "098261801",
-    avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Vin Solyvay brings fresh perspective and dedication to the Cambodian real estate market. With a focus on client satisfaction and market expertise, he helps both local and international clients navigate the property landscape with confidence.",
-    experience_years: 5,
-    specialties: ["Residential Properties", "First-time Buyers", "Market Analysis", "Client Relations"],
-    languages: ["English", "Khmer"],
-    properties_sold: 85,
-    rating: 4.8
-  },
-  {
-    id: "008",
-    name: "HENG RITA",
-    position: "Senior Real Estate Agent",
-    email: "rytavsv168@gmail.com",
-    phone: "098-261-808",
-    telegram: "assistant_vstv168",
-    avatar_url: "/images/agents/Heng-Rita.jpg",
-    background_image: "/images/company/VSTV-BG.png",
-    bio: "Heng Rita is a senior real estate professional with deep knowledge of the Cambodian property market. She specializes in luxury residential properties and has built strong relationships with both local and international clients.",
-    experience_years: 7,
-    specialties: ["Luxury Residential", "International Clients", "Property Investment", "Market Trends"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 120,
-    rating: 4.9
-  },
-  {
-    id: "009",
-    name: "PENG HOUNANG",
-    position: "Real Estate Agent Manager",
-    email: "Penghounang111@gmail.com",
-    phone: "+855 93 76 51 11",
-    telegram: "093765111",
-    avatar_url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Peng Hounang serves as a Real Estate Agent Manager, bringing strategic leadership and extensive market knowledge to the team. His management experience combined with deep property expertise makes him an invaluable asset to both clients and colleagues.",
-    experience_years: 10,
-    specialties: ["Strategic Planning", "Team Management", "Commercial Properties", "Investment Analysis"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 200,
-    rating: 4.9
-  },
-  {
-    id: "0010",
-    name: "NHEM SAMI",
-    position: "Real Estate Agent",
-    email: "nhemsami@gmail.com",
-    phone: "+855 10 773 523",
-    telegram: "010773523",
-    avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Nhem Sami is a dedicated real estate professional committed to helping clients find their perfect property. With a focus on residential properties and excellent customer service, he ensures every client receives personalized attention.",
-    experience_years: 4,
-    specialties: ["Residential Properties", "Customer Service", "Property Tours", "Market Research"],
-    languages: ["English", "Khmer"],
-    properties_sold: 65,
-    rating: 4.7
-  },
-  {
-    id: "005",
-    name: "KHUN SINDIKA",
-    position: "Real Estate Agent",
-    email: "khunsingdika@gmail.com",
-    phone: "+855 96 616 1180",
-    telegram: "0966161180",
-    avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Khun Sindika is a professional real estate agent with a passion for helping clients navigate the property market. Her attention to detail and commitment to excellence make her a trusted advisor for property transactions.",
-    experience_years: 6,
-    specialties: ["Residential Properties", "Property Valuation", "Client Relations", "Market Analysis"],
-    languages: ["English", "Khmer"],
-    properties_sold: 95,
-    rating: 4.8
-  },
-  {
-    id: "007",
-    name: "OEURN CHET",
-    position: "Real Estate Agent Supervisor",
-    email: "chetvstv@gmail.com",
-    phone: "098-261-807",
-    telegram: "Salevstv007",
-    avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    background_image: "/images/company/VSTV-BG.png",
-    bio: "Oeurn Chet serves as a Real Estate Agent Supervisor, combining leadership skills with extensive property market knowledge. His supervisory role allows him to guide both clients and team members toward successful property transactions.",
-    experience_years: 9,
-    specialties: ["Team Leadership", "Luxury Properties", "Investment Consulting", "Client Management"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 160,
-    rating: 4.9
-  }
-]
 
 
 export default function AgentsPage() {
-  const [agents, setAgents] = useState(fallbackAgents)
+  const [agents, setAgents] = useState<Agent[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('position')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
@@ -133,52 +23,153 @@ export default function AgentsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [agentsPerPage] = useState(6)
 
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const { data: agentsData, error } = await supabase
-          .from('agents')
-          .select('*')
-          .eq('is_active', true)
-          .order('id', { ascending: true })
-        
-        if (!error && agentsData) {
-          setAgents(agentsData)
-        }
-      } catch (error) {
-        console.error('Error fetching agents:', error)
-        // Use fallback data
-      } finally {
+  const fetchAgents = async () => {
+    try {
+      console.log('🔄 Fetching agents...')
+      setIsLoading(true)
+      
+      if (!supabase) {
+        console.error('Supabase client not configured. Please set up environment variables.')
+        setAgents([])
         setIsLoading(false)
+        return
       }
-    }
 
+      // Add timestamp to force fresh data
+      const timestamp = Date.now()
+      console.log(`🕐 Fetching agents at ${new Date(timestamp).toLocaleTimeString()}`)
+      
+      const { data: agentsData, error } = await supabase
+        .from('agents')
+        .select('*')
+        .eq('is_active', true)
+        .order('id', { ascending: true })
+      
+      console.log('📊 Agents data:', agentsData)
+      console.log('❌ Error:', error)
+      
+      if (error) {
+        console.error('Error fetching agents:', error)
+        setAgents([])
+        setIsLoading(false)
+        return
+      }
+
+      if (agentsData && agentsData.length > 0) {
+        console.log(`✅ Found ${agentsData.length} active agents`)
+        // Transform data to match frontend expectations
+        const transformedAgents: Agent[] = agentsData.map((agent: SupabaseAgent) => ({
+          id: agent.id,
+          name: agent.name,
+          email: agent.email,
+          phone: agent.phone || '',
+          telegram: agent.telegram || '',
+          position: agent.position || '',
+          bio: agent.bio || '',
+          avatar_url: agent.avatar_url || '',
+          background_image: agent.background_image || '/images/company/VSTV-BG.png',
+          specialties: agent.specialties || [],
+          languages: agent.languages || [],
+          experience_years: agent.experience_years || 0,
+          properties_sold: agent.properties_sold || 0,
+          rating: agent.rating || 0,
+          education: agent.education || '',
+          certifications: agent.certifications || [],
+          achievements: agent.achievements || [],
+          location: agent.location || 'Phnom Penh',
+          is_active: agent.is_active,
+          created_at: agent.created_at,
+          updated_at: agent.updated_at
+        }))
+        setAgents(transformedAgents)
+      } else {
+        console.log('❌ No agents found in database')
+        setAgents([])
+      }
+    } catch (error) {
+      console.error('Error fetching agents:', error)
+      setAgents([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     fetchAgents()
   }, [])
 
+  // Refetch agents when the page becomes visible (e.g., after navigation)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('👁️ Page became visible, refreshing agents...')
+        fetchAgents()
+      }
+    }
+
+    const handleFocus = () => {
+      console.log('🎯 Window focused, refreshing agents...')
+      fetchAgents()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
+  // Manual refresh function
+  const handleRefresh = () => {
+    console.log('🔄 Manual refresh triggered')
+    fetchAgents()
+  }
+
   // Get unique specialties for filter
   const allSpecialties = useMemo(() => {
-    const specialties = new Set<string>()
-    agents.forEach(agent => {
-      agent.specialties.forEach(specialty => specialties.add(specialty))
-    })
-    return Array.from(specialties).sort()
+    try {
+      const specialties = new Set<string>()
+      if (Array.isArray(agents)) {
+        agents.forEach(agent => {
+          if (agent && agent.specialties && Array.isArray(agent.specialties)) {
+            agent.specialties.forEach(specialty => {
+              if (typeof specialty === 'string') {
+                specialties.add(specialty)
+              }
+            })
+          }
+        })
+      }
+      return Array.from(specialties).sort()
+    } catch (error) {
+      console.error('Error processing specialties:', error)
+      return []
+    }
   }, [agents])
 
   // Filter and sort agents
   const filteredAndSortedAgents = useMemo(() => {
-    const filtered = agents.filter(agent => {
-      const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          agent.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          agent.bio.toLowerCase().includes(searchTerm.toLowerCase())
+    try {
+      if (!Array.isArray(agents)) return []
       
-      const matchesSpecialty = !filterSpecialty || agent.specialties.includes(filterSpecialty)
-      
-      return matchesSearch && matchesSpecialty
-    })
+      const filtered = agents.filter(agent => {
+        if (!agent || !agent.name || !agent.position || !agent.bio) return false
+        
+        const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            agent.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            agent.bio.toLowerCase().includes(searchTerm.toLowerCase())
+        
+        const matchesSpecialty = !filterSpecialty || (agent.specialties && agent.specialties.includes(filterSpecialty))
+        
+        return matchesSearch && matchesSpecialty
+      })
 
     // Sort agents
     filtered.sort((a, b) => {
+      if (!a || !b) return 0
+      
       let comparison = 0
       
       switch (sortBy) {
@@ -194,16 +185,16 @@ export default function AgentsPage() {
           comparison = aOrder - bOrder
           break
         case 'rating':
-          comparison = a.rating - b.rating
+          comparison = (a.rating || 0) - (b.rating || 0)
           break
         case 'experience':
-          comparison = a.experience_years - b.experience_years
+          comparison = (a.experience_years || 0) - (b.experience_years || 0)
           break
         case 'properties':
-          comparison = a.properties_sold - b.properties_sold
+          comparison = (a.properties_sold || 0) - (b.properties_sold || 0)
           break
         case 'name':
-          comparison = a.name.localeCompare(b.name)
+          comparison = (a.name || '').localeCompare(b.name || '')
           break
         default:
           comparison = 0
@@ -212,7 +203,11 @@ export default function AgentsPage() {
       return sortOrder === 'asc' ? comparison : -comparison
     })
 
-    return filtered
+      return filtered
+    } catch (error) {
+      console.error('Error filtering and sorting agents:', error)
+      return []
+    }
   }, [agents, searchTerm, sortBy, sortOrder, filterSpecialty])
 
   // Pagination logic
@@ -242,6 +237,17 @@ export default function AgentsPage() {
             <p className="mt-4 text-lg leading-8 text-gray-600">
               Meet our experienced real estate professionals who are here to help you
             </p>
+            <div className="mt-6">
+              <Button 
+                onClick={handleRefresh}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Search className="h-4 w-4" />
+                Refresh Agents
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -449,7 +455,7 @@ export default function AgentsPage() {
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-900 mb-2 text-sm">Specialties</h4>
                   <div className="flex flex-wrap gap-1">
-                    {agent.specialties.slice(0, 3).map((specialty, index) => (
+                    {agent.specialties && agent.specialties.slice(0, 3).map((specialty, index) => (
                       <span
                         key={index}
                         className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
@@ -457,7 +463,7 @@ export default function AgentsPage() {
                         {specialty}
                       </span>
                     ))}
-                    {agent.specialties.length > 3 && (
+                    {agent.specialties && agent.specialties.length > 3 && (
                       <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
                         +{agent.specialties.length - 3} more
                       </span>

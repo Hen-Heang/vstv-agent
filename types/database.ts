@@ -75,14 +75,20 @@ export interface Database {
           name: string
           email: string
           phone: string | null
+          telegram: string | null
           position: string | null
           bio: string | null
           avatar_url: string | null
+          background_image: string | null
           specialties: string[]
           languages: string[]
           experience_years: number
           properties_sold: number
           rating: number
+          education: string | null
+          certifications: string[]
+          achievements: string[]
+          location: string | null
           is_active: boolean
           created_at: string
           updated_at: string
@@ -92,14 +98,20 @@ export interface Database {
           name: string
           email: string
           phone?: string | null
+          telegram?: string | null
           position?: string | null
           bio?: string | null
           avatar_url?: string | null
+          background_image?: string | null
           specialties?: string[]
           languages?: string[]
           experience_years?: number
           properties_sold?: number
           rating?: number
+          education?: string | null
+          certifications?: string[]
+          achievements?: string[]
+          location?: string | null
           is_active?: boolean
           created_at?: string
           updated_at?: string
@@ -109,14 +121,20 @@ export interface Database {
           name?: string
           email?: string
           phone?: string | null
+          telegram?: string | null
           position?: string | null
           bio?: string | null
           avatar_url?: string | null
+          background_image?: string | null
           specialties?: string[]
           languages?: string[]
           experience_years?: number
           properties_sold?: number
           rating?: number
+          education?: string | null
+          certifications?: string[]
+          achievements?: string[]
+          location?: string | null
           is_active?: boolean
           created_at?: string
           updated_at?: string

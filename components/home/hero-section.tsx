@@ -15,11 +15,15 @@ interface HeroSlide {
   id: string
   title: string
   subtitle: string
-  backgroundImage: string
+  background_image: string
+  backgroundImage?: string // For backward compatibility
   cta: string
-  ctaSecondary: string
-  ctaLink?: string
-  ctaSecondaryLink?: string
+  cta_secondary: string
+  ctaSecondary?: string // For backward compatibility
+  cta_link?: string
+  ctaLink?: string // For backward compatibility
+  cta_secondary_link?: string
+  ctaSecondaryLink?: string // For backward compatibility
 }
 
 export default function HeroSection() {
@@ -29,7 +33,7 @@ export default function HeroSection() {
   const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch hero slides from API with fallback
+  // Fetch hero slides from Supabase
   useEffect(() => {
     const fetchHeroSlides = async () => {
       try {
@@ -38,56 +42,12 @@ export default function HeroSection() {
           const slides = await response.json()
           setHeroSlides(slides)
         } else {
-          // Fallback to static data if API fails
-          console.log('Using fallback hero slides')
-          setHeroSlides([
-            {
-              id: '1',
-              title: "Find Your Dream Property in Cambodia",
-              subtitle: "Discover premium condos, luxury apartments, and exclusive villas in Cambodia's most desirable locations with expert guidance.",
-              backgroundImage: "/images/company/VSTV-BG.png",
-              cta: "Explore Properties",
-              ctaSecondary: "Contact Agent",
-              ctaLink: "/properties",
-              ctaSecondaryLink: "/contact"
-            },
-            {
-              id: '2',
-              title: "Premium Properties in Prime Locations",
-              subtitle: "From BKK1 luxury condos to Sen Sok family homes, find your perfect property with Cambodia's trusted real estate experts.",
-              backgroundImage: "/images/properties/featured/luxury-condo-bkk1.jpg",
-              cta: "View Listings",
-              ctaSecondary: "Schedule Tour",
-              ctaLink: "/properties",
-              ctaSecondaryLink: "/contact"
-            },
-            {
-              id: '3',
-              title: "Meet Our Expert Agents",
-              subtitle: "Professional real estate agents with extensive experience in the Cambodian market. Let our experts guide you to your perfect property.",
-              backgroundImage: "/images/agents/Heng-Rita.jpg",
-              cta: "Meet Our Agents",
-              ctaSecondary: "Contact Agent",
-              ctaLink: "/agents",
-              ctaSecondaryLink: "/agents/008"
-            }
-          ])
+          console.error('Failed to fetch hero slides from API')
+          setHeroSlides([])
         }
       } catch (error) {
         console.error('Error fetching hero slides:', error)
-        // Use fallback data
-        setHeroSlides([
-          {
-            id: '1',
-            title: "Find Your Dream Property in Cambodia",
-            subtitle: "Discover premium condos, luxury apartments, and exclusive villas in Cambodia's most desirable locations with expert guidance.",
-            backgroundImage: "/images/company/VSTV-BG.png",
-            cta: "Explore Properties",
-            ctaSecondary: "Contact Agent",
-            ctaLink: "/properties",
-            ctaSecondaryLink: "/contact"
-          }
-        ])
+        setHeroSlides([])
       } finally {
         setIsLoading(false)
       }
@@ -199,7 +159,7 @@ export default function HeroSection() {
             className="absolute inset-0"
           >
             <Image
-              src={heroSlides[currentSlide].backgroundImage}
+              src={heroSlides[currentSlide].background_image || heroSlides[currentSlide].backgroundImage || '/images/company/VSTV-BG.png'}
               alt={heroSlides[currentSlide].title}
               fill
               className="object-cover"
@@ -248,7 +208,7 @@ export default function HeroSection() {
                 className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[48px] touch-manipulation"
               >
                 <Link 
-                  href={heroSlides[currentSlide].ctaLink || "/properties"} 
+                  href={heroSlides[currentSlide].cta_link || heroSlides[currentSlide].ctaLink || "/properties"} 
                   className="flex items-center justify-center gap-2"
                 >
                   <Search className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -263,11 +223,11 @@ export default function HeroSection() {
                 className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[48px] touch-manipulation"
               >
                 <Link 
-                  href={heroSlides[currentSlide].ctaSecondaryLink || "/contact"} 
+                  href={heroSlides[currentSlide].cta_secondary_link || heroSlides[currentSlide].ctaSecondaryLink || "/contact"} 
                   className="flex items-center justify-center gap-2"
                 >
                   <Star className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="truncate">{heroSlides[currentSlide].ctaSecondary}</span>
+                  <span className="truncate">{heroSlides[currentSlide].cta_secondary || heroSlides[currentSlide].ctaSecondary}</span>
                 </Link>
               </Button>
             </motion.div>

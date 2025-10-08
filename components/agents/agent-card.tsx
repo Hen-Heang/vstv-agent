@@ -32,6 +32,7 @@ interface AgentCardProps {
 export default function AgentCard({ agent, className = '' }: AgentCardProps) {
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false)
   const [selectedContactMethod, setSelectedContactMethod] = useState<'phone' | 'email' | 'telegram' | null>(null)
+  const [imageError, setImageError] = useState(false)
 
   const handleContactClick = (method: 'phone' | 'email' | 'telegram') => {
     setSelectedContactMethod(method)
@@ -74,15 +75,24 @@ export default function AgentCard({ agent, className = '' }: AgentCardProps) {
         <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-blue-200 min-h-[400px]">
           {/* Full Background Image */}
           <div className="absolute inset-0">
-            <Image
-              src={agent.avatar_url}
-              alt={`${agent.name} - ${agent.position}`}
-              fill
-              className="object-cover"
-              loading="lazy"
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-            />
+            {!imageError ? (
+              <Image
+                src={agent.avatar_url}
+                alt={`${agent.name} - ${agent.position}`}
+                fill
+                className="object-cover"
+                loading="lazy"
+                onError={() => setImageError(true)}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <div className="text-white text-6xl font-bold">
+                  {agent.name.split(' ').map(n => n[0]).join('')}
+                </div>
+              </div>
+            )}
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/40" />
             {/* Gradient Overlay */}

@@ -70,7 +70,30 @@ export default function PropertiesManagement() {
   const [filterType, setFilterType] = useState('all')
   const [filterStatus, setFilterStatus] = useState('all')
   const [showForm, setShowForm] = useState(false)
-  const [editingProperty, setEditingProperty] = useState<Property | null>(null)
+  const [editingProperty, setEditingProperty] = useState<{
+    id?: string
+    title: string
+    description: string
+    price: number
+    priceType: string
+    propertyType: string
+    bedrooms: number | null
+    bathrooms: number | null
+    area: number | null
+    location: string
+    address: string
+    latitude: number | null
+    longitude: number | null
+    images: string[]
+    features: string[]
+    isFeatured: boolean
+    isAvailable: boolean
+    availabilityInfo: string
+    availabilityDate: string
+    commissionRate: number | null
+    specialConditions: string[]
+    agentId: string
+  } | null>(null)
 
   useEffect(() => {
     fetchProperties()
@@ -151,7 +174,30 @@ export default function PropertiesManagement() {
   }
 
   const handleEdit = (property: Property) => {
-    setEditingProperty(property)
+    setEditingProperty({
+      id: property.id,
+      title: property.title,
+      description: '',
+      price: property.price,
+      priceType: property.priceType,
+      propertyType: property.propertyType,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      area: property.area,
+      location: property.location,
+      address: '',
+      latitude: null,
+      longitude: null,
+      images: property.images,
+      features: property.features,
+      isFeatured: property.isFeatured,
+      isAvailable: property.isAvailable,
+      availabilityInfo: '',
+      availabilityDate: '',
+      commissionRate: null,
+      specialConditions: [],
+      agentId: property.agent.id
+    })
     setShowForm(true)
   }
 

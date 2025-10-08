@@ -1,18 +1,30 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/database'
+import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   try {
-    const heroSlides = await prisma.heroSlide.findMany({
-      where: {
-        isActive: true
-      },
-      orderBy: {
-        order: 'asc'
-      }
-    })
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase client not configured. Please set up environment variables.' },
+        { status: 503 }
+      )
+    }
 
-    return NextResponse.json(heroSlides)
+    const { data: heroSlides, error } = await supabase
+      .from('hero_slides')
+      .select('*')
+      .eq('is_active', true)
+      .order('order', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching hero slides:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch hero slides from database' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json(heroSlides || [])
   } catch (error) {
     console.error('Error fetching hero slides:', error)
     return NextResponse.json(

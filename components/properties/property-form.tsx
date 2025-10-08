@@ -97,7 +97,7 @@ export default function PropertyForm({ property, onSuccess, onCancel }: Property
     fetchAgents()
   }, [])
 
-  const handleInputChange = (field: keyof Property, value: any) => {
+  const handleInputChange = (field: keyof Property, value: string | number | boolean | string[] | null) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

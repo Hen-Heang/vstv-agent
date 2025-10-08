@@ -67,7 +67,7 @@ export default function CompanyShowcase() {
             website: 'https://vstvagent.com',
             socialMedia: {
               telegram: '@vstvagent',
-              facebook: 'https://facebook.com/vstvagent',
+              facebook: 'https://www.facebook.com/share/1BL2cw4au3/?mibextid=wwXIfr',
               instagram: 'https://instagram.com/vstvagent'
             },
             stats: {
