@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import UnitForm from '@/components/units/unit-form'
 import UnitTable from '@/components/units/unit-table'
 import UnitDetails from '@/components/units/unit-details'
 import { exportUnitsToPDF, exportUnitsToCSV } from '@/lib/pdf-export'
-import { Plus, FileText, Table, Trash2, AlertTriangle } from 'lucide-react'
+import { FileText, Table, AlertTriangle } from 'lucide-react'
+import { LOCAL_STORAGE_KEYS, loadLocalJson, saveLocalJson } from '@/lib/local-persistence'
 
 interface Unit {
   id: string
@@ -25,21 +25,27 @@ export default function UnitsPage() {
   const [units, setUnits] = useState<Unit[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showForm, setShowForm] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-  const [editingUnit, setEditingUnit] = useState<Unit | null>(null)
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null)
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+
+  const readLocalUnits = () => loadLocalJson<Unit[]>(LOCAL_STORAGE_KEYS.units) ?? null
 
   // Fetch units from API
   const fetchUnits = async () => {
     try {
       setLoading(true)
       setError(null)
+
+      const local = readLocalUnits()
+      if (local && Array.isArray(local)) {
+        setUnits(local)
+        return
+      }
       const response = await fetch('/api/units')
       if (response.ok) {
         const data = await response.json()
         setUnits(data)
+        saveLocalJson(LOCAL_STORAGE_KEYS.units, data as unknown as any)
       } else {
         const errorData = await response.json()
         setError(errorData.error || 'Failed to fetch units')
@@ -98,65 +104,10 @@ export default function UnitsPage() {
     fetchUnits()
   }, [])
 
-  // Handle form submission
-  const handleSaveUnit = async (unitData: Omit<Unit, 'id' | 'createdAt' | 'updatedAt'>) => {
-    try {
-      const url = editingUnit ? `/api/units/${editingUnit.id}` : '/api/units'
-      const method = editingUnit ? 'PUT' : 'POST'
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(unitData),
-      })
-
-      if (response.ok) {
-        await fetchUnits() // Refresh the list
-        setShowForm(false)
-        setEditingUnit(null)
-      } else {
-        console.error('Failed to save unit')
-      }
-    } catch (error) {
-      console.error('Error saving unit:', error)
-    }
-  }
-
-  // Handle unit deletion
-  const handleDeleteUnit = async (id: string) => {
-    try {
-      const response = await fetch(`/api/units/${id}`, {
-        method: 'DELETE',
-      })
-
-      if (response.ok) {
-        await fetchUnits() // Refresh the list
-        setDeleteConfirm(null)
-      } else {
-        console.error('Failed to delete unit')
-      }
-    } catch (error) {
-      console.error('Error deleting unit:', error)
-    }
-  }
-
-  // Handle edit
-  const handleEdit = (unit: Unit) => {
-    setEditingUnit(unit)
-    setShowForm(true)
-  }
-
   // Handle view
   const handleView = (unit: Unit) => {
     setSelectedUnit(unit)
     setShowDetails(true)
-  }
-
-  // Handle delete confirmation
-  const handleDeleteClick = (id: string) => {
-    setDeleteConfirm(id)
   }
 
   // Export functions
@@ -168,12 +119,6 @@ export default function UnitsPage() {
   const handleExportCSV = () => {
     console.log('Exporting CSV with units:', units)
     exportUnitsToCSV(units, `units-export-${new Date().toISOString().split('T')[0]}.csv`)
-  }
-
-  // Close form and reset state
-  const handleCloseForm = () => {
-    setShowForm(false)
-    setEditingUnit(null)
   }
 
   // Close details
@@ -216,22 +161,12 @@ export default function UnitsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Unit Management</h1>
-          <p className="text-gray-600">Manage your available units, update information, and export data for your team and clients.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Available Units</h1>
+          <p className="text-gray-600">Browse available units and export the list for sharing.</p>
         </div>
 
         {/* Action Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-          <div className="flex space-x-3">
-            <Button 
-              onClick={() => setShowForm(true)}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add New Unit
-            </Button>
-          </div>
-          
           <div className="flex space-x-3">
             <Button 
               variant="outline" 
@@ -281,65 +216,15 @@ export default function UnitsPage() {
         {/* Unit Table */}
         <UnitTable
           units={units}
-          onEdit={handleEdit}
-          onDelete={handleDeleteClick}
           onView={handleView}
         />
-
-        {/* Unit Form Modal */}
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-              <UnitForm
-                unit={editingUnit || undefined}
-                onSave={handleSaveUnit}
-                onCancel={handleCloseForm}
-                isEditing={!!editingUnit}
-              />
-            </div>
-          </div>
-        )}
 
         {/* Unit Details Modal */}
         {showDetails && selectedUnit && (
           <UnitDetails
             unit={selectedUnit}
             onClose={handleCloseDetails}
-            onEdit={handleEdit}
           />
-        )}
-
-        {/* Delete Confirmation Modal */}
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <Card className="w-full max-w-md">
-              <div className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <AlertTriangle className="h-6 w-6 text-red-600" />
-                  <h3 className="text-lg font-semibold">Confirm Delete</h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Are you sure you want to delete this unit? This action cannot be undone.
-                </p>
-                <div className="flex justify-end space-x-3">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setDeleteConfirm(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => handleDeleteUnit(deleteConfirm)}
-                    className="text-red-600 border-red-600 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
         )}
       </div>
     </div>

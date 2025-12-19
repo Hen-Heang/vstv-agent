@@ -38,6 +38,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import PropertyForm from '@/components/properties/property-form'
+import { LOCAL_STORAGE_KEYS, loadLocalJson, removeById, saveLocalJson } from '@/lib/local-persistence'
 
 interface Property {
   id: string
@@ -105,13 +106,17 @@ export default function PropertiesManagement() {
 
   const fetchProperties = async () => {
     try {
-      const response = await fetch('/api/properties')
-      if (response.ok) {
-        const data = await response.json()
-        setProperties(data)
-      } else {
-        toast.error('Failed to fetch properties')
+      const local = loadLocalJson<Property[]>(LOCAL_STORAGE_KEYS.properties)
+      if (local && Array.isArray(local)) {
+        setProperties(local)
+        return
       }
+
+      const response = await fetch('/api/properties')
+      if (!response.ok) throw new Error('Failed to fetch properties')
+      const data = (await response.json()) as Property[]
+      setProperties(data)
+      saveLocalJson(LOCAL_STORAGE_KEYS.properties, data as unknown as any)
     } catch (error) {
       console.error('Error fetching properties:', error)
       toast.error('Failed to fetch properties')
@@ -157,16 +162,11 @@ export default function PropertiesManagement() {
     }
 
     try {
-      const response = await fetch(`/api/properties/${id}`, {
-        method: 'DELETE'
-      })
-
-      if (response.ok) {
-        toast.success('Property deleted successfully')
-        fetchProperties()
-      } else {
-        toast.error('Failed to delete property')
-      }
+      const current = loadLocalJson<Property[]>(LOCAL_STORAGE_KEYS.properties) ?? properties
+      const next = removeById(current, id)
+      saveLocalJson(LOCAL_STORAGE_KEYS.properties, next as unknown as any)
+      setProperties(next)
+      toast.success('Property deleted (on this device)')
     } catch (error) {
       console.error('Error deleting property:', error)
       toast.error('Failed to delete property')
@@ -174,6 +174,37 @@ export default function PropertiesManagement() {
   }
 
   const handleEdit = (property: Property) => {
+    const full = loadLocalJson<any[]>(LOCAL_STORAGE_KEYS.properties)?.find((p) => p?.id === property.id)
+
+    if (full) {
+      setEditingProperty({
+        id: full.id,
+        title: full.title ?? property.title,
+        description: full.description ?? '',
+        price: full.price ?? property.price,
+        priceType: full.priceType ?? property.priceType,
+        propertyType: full.propertyType ?? property.propertyType,
+        bedrooms: full.bedrooms ?? property.bedrooms,
+        bathrooms: full.bathrooms ?? property.bathrooms,
+        area: full.area ?? property.area,
+        location: full.location ?? property.location,
+        address: full.address ?? '',
+        latitude: full.latitude ?? null,
+        longitude: full.longitude ?? null,
+        images: full.images ?? property.images,
+        features: full.features ?? property.features,
+        isFeatured: Boolean(full.isFeatured ?? property.isFeatured),
+        isAvailable: Boolean(full.isAvailable ?? property.isAvailable),
+        availabilityInfo: full.availabilityInfo ?? '',
+        availabilityDate: full.availabilityDate ?? '',
+        commissionRate: full.commissionRate ?? null,
+        specialConditions: full.specialConditions ?? [],
+        agentId: full.agentId ?? property.agent?.id ?? '',
+      })
+      setShowForm(true)
+      return
+    }
+
     setEditingProperty({
       id: property.id,
       title: property.title,
@@ -196,7 +227,7 @@ export default function PropertiesManagement() {
       availabilityDate: '',
       commissionRate: null,
       specialConditions: [],
-      agentId: property.agent.id
+      agentId: property.agent?.id ?? ''
     })
     setShowForm(true)
   }
@@ -204,7 +235,9 @@ export default function PropertiesManagement() {
   const handleFormSuccess = () => {
     setShowForm(false)
     setEditingProperty(null)
-    fetchProperties()
+    const local = loadLocalJson<Property[]>(LOCAL_STORAGE_KEYS.properties)
+    if (local) setProperties(local)
+    else fetchProperties()
   }
 
   const handleFormCancel = () => {
@@ -253,6 +286,12 @@ export default function PropertiesManagement() {
           Add Property
         </Button>
       </div>
+
+      <Card className="mb-6 border-amber-200 bg-amber-50">
+        <CardContent className="p-4 text-sm text-amber-900">
+          Changes here are saved to your browser only (localStorage). They will not sync to other devices/users.
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card className="mb-6">

@@ -26,9 +26,9 @@ interface Unit {
 
 interface UnitTableProps {
   units: Unit[]
-  onEdit: (unit: Unit) => void
-  onDelete: (id: string) => void
-  onView: (unit: Unit) => void
+  onEdit?: (unit: Unit) => void
+  onDelete?: (id: string) => void
+  onView?: (unit: Unit) => void
 }
 
 export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTableProps) {
@@ -36,6 +36,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
   const [statusFilter, setStatusFilter] = useState('all')
   const [sortBy, setSortBy] = useState<'unitNo' | 'price' | 'roomType' | 'handleBy' | 'status'>('unitNo')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const isManageMode = Boolean(onEdit || onDelete)
 
   const filteredUnits = units
     .filter(unit => {
@@ -103,7 +104,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
   return (
     <Card className="p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-        <h2 className="text-xl font-semibold">Unit Management</h2>
+        <h2 className="text-xl font-semibold">{isManageMode ? 'Unit Management' : 'Unit List'}</h2>
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -191,33 +192,39 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
             )}
             
             <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onView(unit)}
-                className="text-blue-600 hover:text-blue-700 flex-1 min-h-[44px] text-base"
-              >
-                <Eye className="h-4 w-4 mr-1" />
-                View
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onEdit(unit)}
-                className="text-green-600 hover:text-green-700 flex-1 min-h-[44px] text-base"
-              >
-                <Edit className="h-4 w-4 mr-1" />
-                Edit
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onDelete(unit.id)}
-                className="text-red-600 hover:text-red-700 flex-1 min-h-[44px] text-base"
-              >
-                <Trash2 className="h-4 w-4 mr-1" />
-                Delete
-              </Button>
+              {onView && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onView(unit)}
+                  className="text-blue-600 hover:text-blue-700 flex-1 min-h-[44px] text-base"
+                >
+                  <Eye className="h-4 w-4 mr-1" />
+                  View
+                </Button>
+              )}
+              {onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(unit)}
+                  className="text-green-600 hover:text-green-700 flex-1 min-h-[44px] text-base"
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDelete(unit.id)}
+                  className="text-red-600 hover:text-red-700 flex-1 min-h-[44px] text-base"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
+              )}
             </div>
           </Card>
         ))}
@@ -275,7 +282,7 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
               </th>
               <th className="text-left py-3 px-4">Remarks</th>
               <th className="text-left py-3 px-4">Availability</th>
-              <th className="text-left py-3 px-4">Actions</th>
+              {(onView || onEdit || onDelete) && <th className="text-left py-3 px-4">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -318,34 +325,42 @@ export default function UnitTable({ units, onEdit, onDelete, onView }: UnitTable
                     )}
                   </div>
                 </td>
-                <td className="py-3 px-4">
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onView(unit)}
-                      className="text-blue-600 hover:text-blue-700"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit(unit)}
-                      className="text-green-600 hover:text-green-700"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onDelete(unit.id)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </td>
+                {(onView || onEdit || onDelete) && (
+                  <td className="py-3 px-4">
+                    <div className="flex space-x-2">
+                      {onView && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onView(unit)}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {onEdit && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEdit(unit)}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {onDelete && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onDelete(unit.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

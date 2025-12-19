@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Bed, Bath, Square, Heart } from 'lucide-react'
+import { LOCAL_STORAGE_KEYS, loadLocalJson, saveLocalJson } from '@/lib/local-persistence'
 
 interface Property {
   id: string
@@ -33,10 +34,18 @@ export default function PropertyGrid() {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
+        const local = loadLocalJson<Property[]>(LOCAL_STORAGE_KEYS.properties)
+        if (local && Array.isArray(local)) {
+          setProperties(local)
+          setIsLoading(false)
+          return
+        }
+
         const response = await fetch('/api/properties')
         if (response.ok) {
           const data = await response.json()
           setProperties(data)
+          saveLocalJson(LOCAL_STORAGE_KEYS.properties, data as unknown as any)
         } else {
           // Fallback to static properties
           console.log('Using fallback properties')

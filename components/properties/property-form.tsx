@@ -12,6 +12,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { X, Plus, Upload, Save, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
+import { LOCAL_STORAGE_KEYS, loadLocalJson, saveLocalJson, upsertById } from '@/lib/local-persistence'
+import type { Property as StoredProperty } from '@/lib/static-store'
 
 interface Property {
   id?: string
@@ -148,38 +150,68 @@ export default function PropertyForm({ property, onSuccess, onCancel }: Property
     setIsLoading(true)
 
     try {
-      const url = property?.id ? `/api/properties/${property.id}` : '/api/properties'
-      const method = property?.id ? 'PUT' : 'POST'
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          price: Number(formData.price),
-          bedrooms: formData.bedrooms ? Number(formData.bedrooms) : null,
-          bathrooms: formData.bathrooms ? Number(formData.bathrooms) : null,
-          area: formData.area ? Number(formData.area) : null,
-          latitude: formData.latitude ? Number(formData.latitude) : null,
-          longitude: formData.longitude ? Number(formData.longitude) : null,
-          commissionRate: formData.commissionRate ? Number(formData.commissionRate) : null,
-          availabilityDate: formData.availabilityDate || null,
-        }),
-      })
-
-      if (response.ok) {
-        toast.success(property?.id ? 'Property updated successfully!' : 'Property created successfully!')
-        if (onSuccess) {
-          onSuccess()
-        } else {
-          router.push('/admin/properties')
-        }
-      } else {
-        const error = await response.json()
-        toast.error(error.message || 'Failed to save property')
+      const now = new Date().toISOString()
+      const normalized = {
+        ...formData,
+        price: Number(formData.price),
+        bedrooms: formData.bedrooms ? Number(formData.bedrooms) : null,
+        bathrooms: formData.bathrooms ? Number(formData.bathrooms) : null,
+        area: formData.area ? Number(formData.area) : null,
+        latitude: formData.latitude ? Number(formData.latitude) : null,
+        longitude: formData.longitude ? Number(formData.longitude) : null,
+        commissionRate: formData.commissionRate ? Number(formData.commissionRate) : null,
+        availabilityDate: formData.availabilityDate || now,
       }
+
+      let existing = loadLocalJson<StoredProperty[]>(LOCAL_STORAGE_KEYS.properties)
+      if (!existing) {
+        try {
+          const response = await fetch('/api/properties')
+          if (response.ok) existing = (await response.json()) as StoredProperty[]
+        } catch {
+          // ignore
+        }
+      }
+
+      const agent = agents.find((a) => a.id === normalized.agentId)
+      const id = property?.id ?? (globalThis.crypto?.randomUUID?.() ?? `property-${Date.now()}`)
+
+      const nextProperty: StoredProperty = {
+        id,
+        title: normalized.title,
+        description: normalized.description || '',
+        price: normalized.price,
+        priceType: normalized.priceType as StoredProperty['priceType'],
+        propertyType: normalized.propertyType,
+        bedrooms: normalized.bedrooms,
+        bathrooms: normalized.bathrooms,
+        area: normalized.area,
+        location: normalized.location,
+        address: normalized.address || normalized.location,
+        latitude: normalized.latitude,
+        longitude: normalized.longitude,
+        images: normalized.images || [],
+        features: normalized.features || [],
+        isFeatured: Boolean(normalized.isFeatured),
+        isAvailable: Boolean(normalized.isAvailable),
+        availabilityInfo: normalized.availabilityInfo || '',
+        availabilityDate: normalized.availabilityDate,
+        commissionRate: normalized.commissionRate,
+        specialConditions: normalized.specialConditions || [],
+        createdAt: (property?.id && (existing?.find((p) => p.id === property.id)?.createdAt)) || now,
+        updatedAt: now,
+        agentId: normalized.agentId,
+        agent: agent
+          ? { id: agent.id, name: agent.name, agentId: agent.id, phone: null, avatar: null }
+          : undefined,
+      }
+
+      const next = upsertById(existing ?? [], nextProperty)
+      saveLocalJson(LOCAL_STORAGE_KEYS.properties, next as unknown as any)
+
+      toast.success(property?.id ? 'Property updated (saved on this device)!' : 'Property created (saved on this device)!')
+      if (onSuccess) onSuccess()
+      else router.push('/admin/properties')
     } catch (error) {
       console.error('Error saving property:', error)
       toast.error('Failed to save property')

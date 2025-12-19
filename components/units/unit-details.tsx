@@ -26,7 +26,7 @@ interface Unit {
 interface UnitDetailsProps {
   unit: Unit
   onClose: () => void
-  onEdit: (unit: Unit) => void
+  onEdit?: (unit: Unit) => void
 }
 
 export default function UnitDetails({ unit, onClose, onEdit }: UnitDetailsProps) {
@@ -201,10 +201,12 @@ export default function UnitDetails({ unit, onClose, onEdit }: UnitDetailsProps)
               <Button variant="outline" onClick={onClose}>
                 Close
               </Button>
-              <Button onClick={() => onEdit(unit)} className="bg-blue-600 hover:bg-blue-700">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Unit
-              </Button>
+              {onEdit && (
+                <Button onClick={() => onEdit(unit)} className="bg-blue-600 hover:bg-blue-700">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Unit
+                </Button>
+              )}
             </div>
           </div>
         </div>
