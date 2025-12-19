@@ -80,7 +80,6 @@ export default function CompanyShowcase() {
         }
       } catch (error) {
         console.error('Error fetching company info:', error)
-        // Use fallback data
         setCompanyInfo({
           id: 'company-1',
           name: 'VSTV AGENT (CAMBODIA) CO., LTD',

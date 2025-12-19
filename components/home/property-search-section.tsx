@@ -209,7 +209,7 @@ export default function PropertySearchSection() {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -240,7 +240,7 @@ export default function PropertySearchSection() {
               <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
               <div className="text-gray-600">Expert Support</div>
             </motion.div>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </section>

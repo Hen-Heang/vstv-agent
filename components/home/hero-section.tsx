@@ -29,9 +29,25 @@ interface HeroSlide {
 export default function HeroSection() {
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([])
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [direction, setDirection] = useState<1 | -1>(1)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+
+  const swipeConfidenceThreshold = 10000
+  const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity
+
+  const backgroundVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+  }
+
+  const contentVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 }),
+  }
 
   // Fetch hero slides from Supabase
   useEffect(() => {
@@ -63,7 +79,7 @@ export default function HeroSection() {
       return
     }
 
-    const duration = 6000 // 6 seconds per slide
+    const duration = 9000 // 9 seconds per slide
     const interval = 50 // Update every 50ms for smooth progress
     let startTime = Date.now()
 
@@ -73,6 +89,7 @@ export default function HeroSection() {
       setProgress(newProgress)
 
       if (newProgress >= 100) {
+        setDirection(1)
         setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
         setProgress(0)
         startTime = Date.now()
@@ -84,18 +101,21 @@ export default function HeroSection() {
 
   const nextSlide = useCallback(() => {
     if (heroSlides.length > 0) {
+      setDirection(1)
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
     }
   }, [heroSlides.length])
 
   const prevSlide = useCallback(() => {
     if (heroSlides.length > 0) {
+      setDirection(-1)
       setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
     }
   }, [heroSlides.length])
 
   const goToSlide = (index: number) => {
     if (index >= 0 && index < heroSlides.length) {
+      setDirection(index > currentSlide ? 1 : -1)
       setCurrentSlide(index)
     }
   }
@@ -152,11 +172,26 @@ export default function HeroSection() {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+            custom={direction}
+            variants={backgroundVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: 'spring', stiffness: 180, damping: 26 },
+              opacity: { duration: 0.35 },
+            }}
             className="absolute inset-0"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.15}
+            dragDirectionLock
+            style={{ touchAction: 'pan-y' }}
+            onDragEnd={(_, info) => {
+              const swipe = swipePower(info.offset.x, info.velocity.x)
+              if (swipe < -swipeConfidenceThreshold) nextSlide()
+              else if (swipe > swipeConfidenceThreshold) prevSlide()
+            }}
           >
             <Image
               src={heroSlides[currentSlide].background_image || heroSlides[currentSlide].backgroundImage || '/images/company/VSTV-BG.png'}
@@ -181,10 +216,12 @@ export default function HeroSection() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                custom={direction}
+                variants={contentVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
               >
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight px-2 text-balance">
                   {heroSlides[currentSlide].title}
@@ -302,7 +339,7 @@ export default function HeroSection() {
       </div>
 
       {/* Properties Counter */}
-      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30">
+      {/* <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -313,7 +350,7 @@ export default function HeroSection() {
           <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">1,247</div>
           <div className="text-xs text-blue-200">Updated daily</div>
         </motion.div>
-      </div>
+      </div> */}
     </section>
   )
 }

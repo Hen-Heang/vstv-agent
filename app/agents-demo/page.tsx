@@ -1,38 +1,7 @@
 import AgentCard from '@/components/agents/agent-card'
 
 const demoAgents = [
-  {
-    id: "004",
-    name: "HENG KIMHONG",
-    position: "Real Estate Agent Supervisor",
-    email: "hengkimhong1803@email.com",
-    phone: "+855 96 4444 027",
-    telegram: "0889832306",
-    avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
-    bio: "With extensive experience in the Cambodian real estate market, Heng Kimhong specializes in luxury properties and investment opportunities. As a supervisor, he leads a team of dedicated agents and has helped hundreds of clients find their dream homes and maximize their investment returns.",
-    experience_years: 8,
-    specialties: ["Luxury Properties", "Investment Consulting", "Property Management", "Team Leadership"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 180,
-    rating: 4.9,
-    location: "Phnom Penh"
-  },
-  {
-    id: "008",
-    name: "HENG RITA",
-    position: "Senior Real Estate Agent",
-    email: "rytavsv168@gmail.com",
-    phone: "098-261-808",
-    telegram: "assistant_vstv168",
-    avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-    bio: "Heng Rita is a senior real estate professional with deep knowledge of the Cambodian property market. She specializes in luxury residential properties and has built strong relationships with both local and international clients.",
-    experience_years: 7,
-    specialties: ["Luxury Residential", "International Clients", "Property Investment", "Market Trends"],
-    languages: ["English", "Khmer", "Chinese"],
-    properties_sold: 120,
-    rating: 4.9,
-    location: "Phnom Penh"
-  },
+
   {
     id: "007",
     name: "OEURN CHET",
