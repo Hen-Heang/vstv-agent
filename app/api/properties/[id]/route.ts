@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/database'
+import { getAgentById, getPropertyById, upsertProperty, deleteProperty } from '@/lib/static-store'
+import type { Property } from '@/lib/static-store'
 
 export async function GET(
   request: Request,
@@ -7,25 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const property = await prisma.property.findUnique({
-      where: { id },
-      include: {
-        agent: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            avatar: true,
-            email: true,
-            bio: true,
-            specialties: true,
-            languages: true,
-            experience: true,
-            rating: true
-          }
-        }
-      }
-    })
+    const property = getPropertyById(id)
 
     if (!property) {
       return NextResponse.json(
@@ -84,10 +67,7 @@ export async function PUT(
       )
     }
 
-    // Check if property exists
-    const existingProperty = await prisma.property.findUnique({
-      where: { id }
-    })
+    const existingProperty = getPropertyById(id)
 
     if (!existingProperty) {
       return NextResponse.json(
@@ -96,42 +76,45 @@ export async function PUT(
       )
     }
 
-    const property = await prisma.property.update({
-      where: { id },
-      data: {
-        title,
-        description,
-        price: Number(price),
-        priceType,
-        propertyType,
-        bedrooms: bedrooms ? Number(bedrooms) : null,
-        bathrooms: bathrooms ? Number(bathrooms) : null,
-        area: area ? Number(area) : null,
-        location,
-        address,
-        latitude: latitude ? Number(latitude) : null,
-        longitude: longitude ? Number(longitude) : null,
-        images: images || [],
-        features: features || [],
-        isFeatured: Boolean(isFeatured),
-        isAvailable: Boolean(isAvailable),
-        availabilityInfo,
-        availabilityDate: availabilityDate ? new Date(availabilityDate) : null,
-        commissionRate: commissionRate ? Number(commissionRate) : null,
-        specialConditions: specialConditions || [],
-        agentId
-      },
-      include: {
-        agent: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            avatar: true
+    const agent = getAgentById(agentId)
+    const updatedAt = new Date().toISOString()
+
+    const property: Property = {
+      ...existingProperty,
+      title,
+      description: description || '',
+      price: Number(price),
+      priceType,
+      propertyType,
+      bedrooms: bedrooms ? Number(bedrooms) : null,
+      bathrooms: bathrooms ? Number(bathrooms) : null,
+      area: area ? Number(area) : null,
+      location,
+      address: address || location,
+      latitude: latitude ? Number(latitude) : null,
+      longitude: longitude ? Number(longitude) : null,
+      images: images || [],
+      features: features || [],
+      isFeatured: Boolean(isFeatured),
+      isAvailable: Boolean(isAvailable),
+      availabilityInfo: availabilityInfo || '',
+      availabilityDate: availabilityDate ? new Date(availabilityDate).toISOString() : existingProperty.availabilityDate,
+      commissionRate: commissionRate ? Number(commissionRate) : null,
+      specialConditions: specialConditions || [],
+      agentId,
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            agentId: agent.id,
+            phone: agent.phone,
+            avatar: agent.avatar_url || null,
           }
-        }
-      }
-    })
+        : undefined,
+      updatedAt,
+    }
+
+    upsertProperty(property)
 
     return NextResponse.json(property)
   } catch (error) {
@@ -149,10 +132,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    // Check if property exists
-    const existingProperty = await prisma.property.findUnique({
-      where: { id }
-    })
+    const existingProperty = getPropertyById(id)
 
     if (!existingProperty) {
       return NextResponse.json(
@@ -161,9 +141,7 @@ export async function DELETE(
       )
     }
 
-    await prisma.property.delete({
-      where: { id }
-    })
+    deleteProperty(id)
 
     return NextResponse.json(
       { message: 'Property deleted successfully' },

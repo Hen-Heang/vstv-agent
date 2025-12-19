@@ -53,11 +53,6 @@ cp env.example .env.local
 # Database
 DATABASE_URL="postgresql://username:password@localhost:5432/vstv_agent"
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
 # App Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
@@ -106,7 +101,6 @@ vstv-agent/
 │   ├── database.ts       # Database connection
 │   ├── prisma.ts         # Prisma client
 │   ├── seed.ts           # Database seeding
-│   └── supabase.ts       # Supabase client
 ├── prisma/               # Database schema and migrations
 │   └── schema.prisma     # Prisma schema
 ├── types/                # TypeScript type definitions
@@ -137,9 +131,6 @@ The application uses the following main entities:
 Make sure to set these in your Vercel dashboard:
 
 - `DATABASE_URL`: Your production PostgreSQL connection string
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Your Google Maps API key
 
 ## Available Scripts

@@ -1,6 +1,8 @@
 // Temporary mock implementation for build
 // TODO: Implement with actual Supabase integration
 
+import { listAvailableProperties } from '@/lib/static-store'
+
 // Mock types
 type Property = Record<string, unknown>
 type Agent = Record<string, unknown>
@@ -71,7 +73,26 @@ export async function trackPropertyView(propertyId: string, ipAddress?: string, 
 
 // Search Properties
 export async function searchProperties(searchTerm: string) {
-  // TODO: Implement actual search logic
-  console.log('Searching properties with term:', searchTerm)
-  return [] as Property[]
+  const term = searchTerm.trim()
+  if (!term) return [] as Property[]
+
+  const normalized = term.toLowerCase().replace(/\s+/g, ' ')
+  const properties = listAvailableProperties()
+
+  const matches = properties.filter((property) => {
+    const haystack = [
+      property.title,
+      property.description,
+      property.location,
+      property.address,
+      property.propertyType,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+
+    return haystack.includes(normalized)
+  })
+
+  return matches as unknown as Property[]
 }

@@ -44,7 +44,7 @@ The Contact Form component is a fully-featured, accessible contact form with cli
 
 ### **Dependencies**
 ```bash
-npm install framer-motion @supabase/supabase-js
+npm install framer-motion
 ```
 
 ### **Component Structure**
@@ -239,8 +239,6 @@ The form is ready for analytics tracking:
 
 ### **Environment Variables**
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### **Database Setup**

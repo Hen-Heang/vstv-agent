@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Bed, Bath, Square, Heart, Share2, Eye, Phone } from 'lucide-react'
+import { toTelHref } from '@/utils/contact-links'
 
 const TelegramIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -186,7 +187,7 @@ export default function InteractivePropertyCard({
             </Link>
           </Button>
           <Button asChild className="group-hover:bg-blue-600 transition-colors duration-200">
-            <a href={`tel:${property.agent.phone}`} className="flex items-center justify-center">
+            <a href={toTelHref(property.agent.phone)} className="flex items-center justify-center">
               <TelegramIcon className="h-4 w-4 mr-1" />
               Contact
             </a>

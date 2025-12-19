@@ -7,8 +7,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Phone, MessageCircle, Mail, MapPin, Search, Filter, SortAsc, SortDesc } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-import type { Agent, SupabaseAgent } from '@/types/agent'
+import type { Agent } from '@/types/agent'
+import { toMailtoHref, toTelegramHref, toTelHref } from '@/utils/contact-links'
 import { useEffect, useState, useMemo } from 'react'
 
 
@@ -28,22 +28,15 @@ export default function AgentsPage() {
       console.log('🔄 Fetching agents...')
       setIsLoading(true)
       
-      if (!supabase) {
-        console.error('Supabase client not configured. Please set up environment variables.')
-        setAgents([])
-        setIsLoading(false)
-        return
-      }
+      // Static mode: fetch agents from internal API (no Supabase)
 
       // Add timestamp to force fresh data
       const timestamp = Date.now()
       console.log(`🕐 Fetching agents at ${new Date(timestamp).toLocaleTimeString()}`)
       
-      const { data: agentsData, error } = await supabase
-        .from('agents')
-        .select('*')
-        .eq('is_active', true)
-        .order('id', { ascending: true })
+      const response = await fetch('/api/agents', { cache: 'no-store' })
+      const agentsData: Agent[] = response.ok ? await response.json() : []
+      const error = response.ok ? null : new Error(response.statusText)
       
       console.log('📊 Agents data:', agentsData)
       console.log('❌ Error:', error)
@@ -58,7 +51,7 @@ export default function AgentsPage() {
       if (agentsData && agentsData.length > 0) {
         console.log(`✅ Found ${agentsData.length} active agents`)
         // Transform data to match frontend expectations
-        const transformedAgents: Agent[] = agentsData.map((agent: SupabaseAgent) => ({
+        const transformedAgents: Agent[] = agentsData.map((agent: Agent) => ({
           id: agent.id,
           name: agent.name,
           email: agent.email,
@@ -479,23 +472,23 @@ export default function AgentsPage() {
                     </Link>
                   </Button>
                   <div className="grid grid-cols-3 gap-1 sm:gap-2">
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
-                      <a href={`tel:${agent.phone}`} className="flex items-center justify-center">
-                        <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
-                      <a href={`https://t.me/${agent.telegram}`} className="flex items-center justify-center">
-                        <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 hover:scale-105 transition-all duration-300 p-2">
-                      <a href={`mailto:${agent.email}`} className="flex items-center justify-center">
-                        <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </a>
-                    </Button>
-                  </div>
-                </div>
+                      <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 p-2 min-h-[44px]">
+                       <a href={toTelHref(agent.phone)} className="flex items-center justify-center" aria-label={`Call ${agent.name}`}>
+                         <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+                       </a>
+                     </Button>
+                     <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 p-2 min-h-[44px]">
+                       <a href={toTelegramHref(agent.telegram)} className="flex items-center justify-center" aria-label={`Message ${agent.name} on Telegram`}>
+                         <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                       </a>
+                     </Button>
+                     <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 p-2 min-h-[44px]">
+                       <a href={toMailtoHref(agent.email)} className="flex items-center justify-center" aria-label={`Email ${agent.name}`}>
+                         <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                       </a>
+                     </Button>
+                   </div>
+                 </div>
               </CardContent>
             </Card>
             ))}

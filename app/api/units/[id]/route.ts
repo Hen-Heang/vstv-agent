@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/database'
+import { deleteUnit, getUnitById, updateUnit } from '@/lib/static-store'
 
 export async function GET(
   request: NextRequest,
@@ -7,9 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const unit = await prisma.unit.findUnique({
-      where: { id }
-    })
+    const unit = getUnitById(id)
 
     if (!unit) {
       return NextResponse.json(
@@ -18,13 +16,7 @@ export async function GET(
       )
     }
 
-    // Convert Decimal to number for JSON serialization
-    const serializedUnit = {
-      ...unit,
-      price: Number(unit.price)
-    }
-
-    return NextResponse.json(serializedUnit)
+    return NextResponse.json(unit)
   } catch (error) {
     console.error('Error fetching unit:', error)
     return NextResponse.json(
@@ -51,25 +43,20 @@ export async function PUT(
       )
     }
 
-    const unit = await prisma.unit.update({
-      where: { id },
-      data: {
-        unitNo,
-        price: parseFloat(price),
-        roomType,
-        handleBy,
-        remarks: remarks || null,
-        status: status || 'available'
-      }
+    const unit = updateUnit(id, {
+      unitNo,
+      price: typeof price === 'number' ? price : parseFloat(price),
+      roomType,
+      handleBy,
+      remarks: remarks || null,
+      status: status || 'available',
     })
 
-    // Convert Decimal to number for JSON serialization
-    const serializedUnit = {
-      ...unit,
-      price: Number(unit.price)
+    if (!unit) {
+      return NextResponse.json({ error: 'Unit not found' }, { status: 404 })
     }
 
-    return NextResponse.json(serializedUnit)
+    return NextResponse.json(unit)
   } catch (error) {
     console.error('Error updating unit:', error)
     return NextResponse.json(
@@ -85,9 +72,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    await prisma.unit.delete({
-      where: { id }
-    })
+
+    const deleted = deleteUnit(id)
+    if (!deleted) {
+      return NextResponse.json({ error: 'Unit not found' }, { status: 404 })
+    }
 
     return NextResponse.json({ message: 'Unit deleted successfully' })
   } catch (error) {

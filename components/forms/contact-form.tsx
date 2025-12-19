@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/toast'
 import { Icons } from '@/components/shared/icons'
 import { validateContactForm } from '@/components/shared/validation'
-import { supabase } from '@/lib/supabase'
 
 interface ContactFormData {
   name: string
@@ -86,20 +85,20 @@ export default function ContactForm({
     setIsSubmitting(true)
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any)
-        .from('contacts')
-        .insert({
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
           message: formData.message.trim(),
-          created_at: new Date().toISOString()
-        })
-        .select()
+        }),
+      })
 
-      if (error) {
-        throw error
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null)
+        throw new Error(payload?.error || 'Failed to send message')
       }
 
       // Success - show toast and clear form
@@ -229,6 +228,10 @@ export default function ContactForm({
               <Input
                 id="phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                enterKeyHint="next"
+                dir="ltr"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, () => document.getElementById('message')?.focus())}

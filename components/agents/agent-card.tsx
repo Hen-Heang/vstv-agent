@@ -7,6 +7,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Icons } from '@/components/shared/icons'
+import { toMailtoHref, toTelegramHref, toTelHref } from '@/utils/contact-links'
 
 interface AgentCardProps {
   agent: {
@@ -44,13 +45,13 @@ export default function AgentCard({ agent, className = '' }: AgentCardProps) {
 
     switch (selectedContactMethod) {
       case 'phone':
-        window.open(`tel:${agent.phone}`, '_self')
+        window.open(toTelHref(agent.phone), '_self')
         break
       case 'email':
-        window.open(`mailto:${agent.email}`, '_self')
+        window.open(toMailtoHref(agent.email), '_self')
         break
       case 'telegram':
-        window.open(`https://t.me/${agent.telegram}`, '_blank')
+        window.open(toTelegramHref(agent.telegram), '_blank')
         break
     }
     setIsContactDialogOpen(false)

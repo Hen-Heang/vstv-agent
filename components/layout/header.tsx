@@ -24,6 +24,25 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
 
+  // Close the mobile menu on route change (prevents it staying open after navigation)
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
+  // Close the mobile menu when switching to desktop breakpoint
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)') // Tailwind `lg`
+
+    const handleChange = () => {
+      if (mediaQuery.matches) setMobileMenuOpen(false)
+    }
+
+    handleChange()
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
@@ -162,14 +181,14 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="lg:hidden">
           <div 
-            className="fixed inset-0 z-[9998] bg-black bg-opacity-60 backdrop-blur-md" 
+            className="fixed inset-0 z-[100000] bg-black bg-opacity-60 backdrop-blur-md" 
             onClick={() => setMobileMenuOpen(false)} 
           />
-          <div className="fixed inset-y-0 right-0 z-[9999] w-full max-w-md bg-white shadow-2xl transform translate-x-0 transition-transform duration-300 ease-in-out border-l-4 border-indigo-500">
+          <div className="fixed inset-y-0 right-0 z-[100001] w-full max-w-md bg-white shadow-2xl transform translate-x-0 transition-transform duration-300 ease-in-out border-l-4 border-indigo-500">
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between px-6 py-8 border-b-2 border-indigo-100 bg-gradient-to-r from-indigo-50 to-blue-50">
+              <div className="flex items-center justify-between px-5 py-5 border-b-2 border-indigo-100 bg-gradient-to-r from-indigo-50 to-blue-50">
                 <Link href="/" className="flex items-center space-x-4" onClick={() => setMobileMenuOpen(false)}>
-                  <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-100 to-blue-100 p-2 shadow-lg">
+                  <div className="relative h-10 w-10 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-100 to-blue-100 p-2 shadow-lg">
                     <Image
                       src="/images/company/VSTV.png"
                       alt="VSTV Agent Logo"
@@ -179,7 +198,7 @@ export default function Header() {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xl font-bold text-gray-900">VSTV Agent</span>
+                    <span className="text-lg font-bold text-gray-900">VSTV Agent</span>
                     <span className="text-sm text-indigo-600 font-semibold uppercase tracking-wide">Real Estate</span>
                   </div>
                 </Link>
@@ -195,21 +214,21 @@ export default function Header() {
                 </button>
               </div>
               
-              <div className="flex-1 overflow-y-auto py-8">
+              <div className="flex-1 overflow-y-auto py-4 bg-white">
                 {/* Mobile Menu Header */}
-                <div className="px-6 mb-6">
+                <div className="px-5 mb-4">
                   <h2 className="text-lg font-bold text-gray-900 mb-2">Navigation</h2>
                   <p className="text-sm text-gray-600">Choose your destination</p>
                 </div>
                 
-                <nav className="space-y-3 px-6">
+                <nav className="space-y-2 px-5">
                   {navigation.map((item, index) => {
                     const isActive = pathname === item.href
                     return (
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`group block rounded-xl px-6 py-5 text-xl font-semibold transition-all duration-200 min-h-[64px] flex items-center shadow-sm hover:shadow-lg hover:scale-[1.02] ${
+                        className={`group block rounded-xl px-5 py-4 text-lg font-semibold transition-all duration-200 min-h-[56px] flex items-center shadow-sm hover:shadow-lg hover:scale-[1.01] ${
                           isActive 
                             ? 'bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 border-l-4 border-indigo-500 shadow-md' 
                             : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-gray-900 hover:border-l-4 hover:border-indigo-300'
@@ -223,7 +242,7 @@ export default function Header() {
                             isActive ? 'bg-indigo-500' : 'bg-gray-300 group-hover:bg-indigo-400'
                           }`} />
                         </div>
-                        <svg className="h-5 w-5 ml-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-5 w-5 ml-3 opacity-50 group-hover:opacity-100 transition-opacity hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </Link>
@@ -231,7 +250,7 @@ export default function Header() {
                   })}
                 </nav>
                 
-                <div className="mt-10 px-6 space-y-5">
+                <div className="mt-6 px-5 space-y-4">
                   <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 mb-4">
                     <h3 className="text-lg font-bold text-gray-900 mb-2">Get in Touch</h3>
                     <p className="text-sm text-gray-600">Ready to find your dream property?</p>
@@ -239,7 +258,7 @@ export default function Header() {
                   
                   <Button 
                     variant="outline" 
-                    className="w-full min-h-[64px] text-xl font-bold border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50" 
+                    className="w-full min-h-[56px] text-lg font-bold border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50" 
                     asChild
                   >
                     <Link href="tel:+85598261807" className="flex items-center justify-center gap-4">
@@ -253,7 +272,7 @@ export default function Header() {
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 min-h-[64px] text-xl font-bold shadow-lg hover:shadow-xl" 
+                    className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 min-h-[56px] text-lg font-bold shadow-lg hover:shadow-xl" 
                     asChild
                   >
                     <Link href="https://t.me/assistant_vstv168" className="flex items-center justify-center gap-4">

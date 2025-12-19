@@ -1,30 +1,10 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getAgentById, listAvailableProperties, upsertProperty } from '@/lib/static-store'
+import type { Property } from '@/lib/static-store'
 
 export async function GET() {
   try {
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Supabase client not configured. Please set up environment variables.' },
-        { status: 503 }
-      )
-    }
-
-    const { data: properties, error } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('is_available', true)
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching properties:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch properties from database' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json(properties || [])
+    return NextResponse.json(listAvailableProperties())
   } catch (error) {
     console.error('Error fetching properties:', error)
     return NextResponse.json(
@@ -36,13 +16,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Supabase client not configured. Please set up environment variables.' },
-        { status: 503 }
-      )
-    }
-
     const body = await request.json()
     
     const {
@@ -77,41 +50,47 @@ export async function POST(request: Request) {
       )
     }
 
-    const { data: property, error } = await supabase
-      .from('properties')
-      .insert({
-        title,
-        description: description || null,
-        price: Number(price),
-        price_type: priceType,
-        property_type: propertyType,
-        bedrooms: bedrooms ? Number(bedrooms) : null,
-        bathrooms: bathrooms ? Number(bathrooms) : null,
-        area: area ? Number(area) : null,
-        location,
-        address: address || null,
-        latitude: latitude ? Number(latitude) : null,
-        longitude: longitude ? Number(longitude) : null,
-        images: images || [],
-        features: features || [],
-        is_featured: Boolean(isFeatured),
-        is_available: Boolean(isAvailable),
-        availability_info: availabilityInfo || null,
-        availability_date: availabilityDate ? new Date(availabilityDate).toISOString() : null,
-        commission_rate: commissionRate ? Number(commissionRate) : null,
-        special_conditions: specialConditions || [],
-        agent_id: agentId
-      } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
-      .select('*')
-      .single()
+    const id = globalThis.crypto?.randomUUID?.() ?? `property-${Date.now()}`
+    const now = new Date().toISOString()
+    const agent = getAgentById(agentId)
 
-    if (error) {
-      console.error('Error creating property:', error)
-      return NextResponse.json(
-        { error: 'Failed to create property in database' },
-        { status: 500 }
-      )
+    const property: Property = {
+      id,
+      title,
+      description: description || '',
+      price: Number(price),
+      priceType,
+      propertyType,
+      bedrooms: bedrooms ? Number(bedrooms) : null,
+      bathrooms: bathrooms ? Number(bathrooms) : null,
+      area: area ? Number(area) : null,
+      location,
+      address: address || location,
+      latitude: latitude ? Number(latitude) : null,
+      longitude: longitude ? Number(longitude) : null,
+      images: images || [],
+      features: features || [],
+      isFeatured: Boolean(isFeatured),
+      isAvailable: Boolean(isAvailable),
+      availabilityInfo: availabilityInfo || '',
+      availabilityDate: availabilityDate ? new Date(availabilityDate).toISOString() : now,
+      commissionRate: commissionRate ? Number(commissionRate) : null,
+      specialConditions: specialConditions || [],
+      createdAt: now,
+      updatedAt: now,
+      agentId,
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            agentId: agent.id,
+            phone: agent.phone,
+            avatar: agent.avatar_url || null,
+          }
+        : undefined,
     }
+
+    upsertProperty(property)
 
     return NextResponse.json(property, { status: 201 })
   } catch (error) {

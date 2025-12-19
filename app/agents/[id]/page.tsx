@@ -5,14 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Phone, Mail, MapPin, Award, Calendar, Star } from 'lucide-react'
 import AgentDetailActions from '@/components/agents/agent-detail-actions'
+import { toMailtoHref, toTelegramHref, toTelHref } from '@/utils/contact-links'
 
 const TelegramIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
   </svg>
 )
-import { supabase } from '@/lib/supabase'
-import type { Agent, SupabaseAgent } from '@/types/agent'
+import { getAgentById } from '@/lib/static-store'
+import type { Agent } from '@/types/agent'
 
 const fallbackAgents = {
   "004": {
@@ -139,7 +140,7 @@ interface AgentDetailPageProps {
 export async function generateMetadata({ params }: AgentDetailPageProps) {
   const { id } = await params
   
-  const agent = fallbackAgents[id as keyof typeof fallbackAgents] || fallbackAgents["004"]
+  const agent = getAgentById(id) || fallbackAgents[id as keyof typeof fallbackAgents] || fallbackAgents["004"]
   
   return {
     title: `${agent.name} - VSTV Agent`,
@@ -150,58 +151,9 @@ export async function generateMetadata({ params }: AgentDetailPageProps) {
 export default async function AgentDetailPage({ params }: AgentDetailPageProps) {
   const { id } = await params
   
-  let agent: Agent | null = null
-  
-  try {
-    if (!supabase) {
-      console.error('Supabase client not configured. Please set up environment variables.')
-      throw new Error('Supabase not configured')
-    }
+  const agent: Agent | null = getAgentById(id)
 
-    const { data: agentData, error } = await supabase
-      .from('agents')
-      .select('*')
-      .eq('id', id)
-      .eq('is_active', true)
-      .single()
-    
-    if (error) {
-      console.error('Error fetching agent:', error)
-      throw new Error(`Agent not found: ${error.message}`)
-    }
-
-    if (!agentData) {
-      throw new Error('Agent not found')
-    }
-
-    // Transform data to match frontend expectations
-    const agentDataTyped = agentData as SupabaseAgent
-    agent = {
-      id: agentDataTyped.id,
-      name: agentDataTyped.name,
-      email: agentDataTyped.email,
-      phone: agentDataTyped.phone || '',
-      telegram: agentDataTyped.telegram || '',
-      position: agentDataTyped.position || '',
-      bio: agentDataTyped.bio || '',
-      avatar_url: agentDataTyped.avatar_url || '',
-      background_image: agentDataTyped.background_image || '/images/company/VSTV-BG.png',
-      specialties: agentDataTyped.specialties || [],
-      languages: agentDataTyped.languages || [],
-      experience_years: agentDataTyped.experience_years || 0,
-      properties_sold: agentDataTyped.properties_sold || 0,
-      rating: agentDataTyped.rating || 0,
-      education: agentDataTyped.education || '',
-      certifications: agentDataTyped.certifications || [],
-      achievements: agentDataTyped.achievements || [],
-      location: agentDataTyped.location || 'Phnom Penh',
-      is_active: agentDataTyped.is_active,
-      created_at: agentDataTyped.created_at,
-      updated_at: agentDataTyped.updated_at
-    }
-  } catch (error) {
-    console.error('Error fetching agent:', error)
-    // Return 404 page instead of fallback data
+  if (!agent || !agent.is_active) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -228,6 +180,10 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
       </div>
     )
   }
+
+  const telHref = toTelHref(agent.phone)
+  const telegramHref = toTelegramHref(agent.telegram)
+  const mailtoHref = toMailtoHref(agent.email)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -464,7 +420,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <Phone className="h-5 w-5 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Phone</p>
-                      <a href={`tel:${agent.phone}`} className="text-sm text-blue-600 hover:underline">
+                      <a href={telHref} className="text-sm text-blue-600 hover:underline break-words">
                         {agent.phone}
                       </a>
                     </div>
@@ -474,7 +430,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <TelegramIcon className="h-5 w-5 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Telegram</p>
-                      <a href={`https://t.me/${agent.telegram}`} className="text-sm text-blue-600 hover:underline">
+                      <a href={telegramHref} className="text-sm text-blue-600 hover:underline break-words">
                         {agent.telegram}
                       </a>
                     </div>
@@ -484,7 +440,7 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                     <Mail className="h-5 w-5 text-gray-400" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Email</p>
-                      <a href={`mailto:${agent.email}`} className="text-sm text-blue-600 hover:underline">
+                      <a href={mailtoHref} className="text-sm text-blue-600 hover:underline break-words">
                         {agent.email}
                       </a>
                     </div>
@@ -493,19 +449,19 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
                 
                 <div className="mt-6 space-y-3">
                   <Button asChild className="w-full">
-                    <a href={`tel:${agent.phone}`} className="flex items-center justify-center">
+                    <a href={telHref} className="flex items-center justify-center">
                       <Phone className="h-4 w-4 mr-2" />
                       Call Now
                     </a>
                   </Button>
                   <Button variant="outline" asChild className="w-full">
-                    <a href={`https://t.me/${agent.telegram}`} className="flex items-center justify-center">
+                    <a href={telegramHref} className="flex items-center justify-center">
                       <TelegramIcon className="h-4 w-4 mr-2" />
                       Telegram
                     </a>
                   </Button>
                   <Button variant="outline" asChild className="w-full">
-                    <a href={`mailto:${agent.email}`} className="flex items-center justify-center">
+                    <a href={mailtoHref} className="flex items-center justify-center">
                       <Mail className="h-4 w-4 mr-2" />
                       Email
                     </a>
