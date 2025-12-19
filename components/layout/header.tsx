@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/cn'
 import { Icons } from '@/components/shared/icons'
@@ -71,6 +72,7 @@ export default function Header() {
         ? "bg-white/90 backdrop-blur-xl shadow-xl shadow-gray-900/5 border-b border-white/20" 
         : "bg-white/95 backdrop-blur-sm shadow-md shadow-gray-900/10"
     )}>
+      <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-8 lg:py-4" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98]">
@@ -108,18 +110,19 @@ export default function Header() {
         
         {/* Mobile menu button */}
         <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open main menu"
-            style={{ minWidth: '56px', minHeight: '56px' }}
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </button>
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              aria-label="Open main menu"
+              style={{ minWidth: '56px', minHeight: '56px' }}
+            >
+              <span className="sr-only">Open main menu</span>
+              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+          </Dialog.Trigger>
         </div>
         
         <div className="hidden lg:flex lg:gap-x-2 xl:gap-x-4">
@@ -178,13 +181,9 @@ export default function Header() {
       </nav>
       
       {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden">
-          <div 
-            className="fixed inset-0 z-[100000] bg-black bg-opacity-60 backdrop-blur-md" 
-            onClick={() => setMobileMenuOpen(false)} 
-          />
-          <div className="fixed inset-y-0 right-0 z-[100001] w-full max-w-md bg-white shadow-2xl transform translate-x-0 transition-transform duration-300 ease-in-out border-l-4 border-indigo-500">
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[100000] bg-black/60 backdrop-blur-md" />
+        <Dialog.Content className="fixed inset-y-0 right-0 z-[100001] w-full max-w-md bg-white shadow-2xl transition-transform duration-300 ease-in-out border-l-4 border-indigo-500 outline-none">
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between px-5 py-5 border-b-2 border-indigo-100 bg-gradient-to-r from-indigo-50 to-blue-50">
                 <Link href="/" className="flex items-center space-x-4" onClick={() => setMobileMenuOpen(false)}>
@@ -202,16 +201,17 @@ export default function Header() {
                     <span className="text-sm text-indigo-600 font-semibold uppercase tracking-wide">Real Estate</span>
                   </div>
                 </Link>
-                <button
-                  type="button"
-                  className="rounded-xl p-3 text-gray-400 hover:text-gray-600 hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="sr-only">Close menu</span>
-                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <Dialog.Close asChild>
+                  <button
+                    type="button"
+                    className="rounded-xl p-3 text-gray-400 hover:text-gray-600 hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110"
+                  >
+                    <span className="sr-only">Close menu</span>
+                    <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </Dialog.Close>
               </div>
               
               <div className="flex-1 overflow-y-auto py-4 bg-white">
@@ -287,9 +287,9 @@ export default function Header() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </Dialog.Content>
+      </Dialog.Portal>
+      </Dialog.Root>
     </header>
   )
 }

@@ -25,32 +25,26 @@ export default function AgentsPage() {
 
   const fetchAgents = async () => {
     try {
-      console.log('🔄 Fetching agents...')
+     
       setIsLoading(true)
       
-      // Static mode: fetch agents from internal API (no Supabase)
-
+      
       // Add timestamp to force fresh data
       const timestamp = Date.now()
-      console.log(`🕐 Fetching agents at ${new Date(timestamp).toLocaleTimeString()}`)
       
       const response = await fetch('/api/agents', { cache: 'no-store' })
       const agentsData: Agent[] = response.ok ? await response.json() : []
       const error = response.ok ? null : new Error(response.statusText)
       
-      console.log('📊 Agents data:', agentsData)
-      console.log('❌ Error:', error)
+      
       
       if (error) {
-        console.error('Error fetching agents:', error)
         setAgents([])
         setIsLoading(false)
         return
       }
 
       if (agentsData && agentsData.length > 0) {
-        console.log(`✅ Found ${agentsData.length} active agents`)
-        // Transform data to match frontend expectations
         const transformedAgents: Agent[] = agentsData.map((agent: Agent) => ({
           id: agent.id,
           name: agent.name,
@@ -76,7 +70,6 @@ export default function AgentsPage() {
         }))
         setAgents(transformedAgents)
       } else {
-        console.log('❌ No agents found in database')
         setAgents([])
       }
     } catch (error) {
@@ -230,7 +223,7 @@ export default function AgentsPage() {
             <p className="mt-4 text-lg leading-8 text-gray-600">
               Meet our experienced real estate professionals who are here to help you
             </p>
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <Button 
                 onClick={handleRefresh}
                 variant="outline"
@@ -240,17 +233,17 @@ export default function AgentsPage() {
                 <Search className="h-4 w-4" />
                 Refresh Agents
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         {/* Search and Filter Section */}
-        <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6"> */}
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"> */}
             {/* Search */}
-            <div className="relative">
+            {/* <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 type="text"
@@ -259,10 +252,10 @@ export default function AgentsPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
-            </div>
+            </div> */}
             
             {/* Sort By */}
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-gray-400 flex-shrink-0" />
               <select
                 value={sortBy}
@@ -275,21 +268,20 @@ export default function AgentsPage() {
                 <option value="properties">Sort by Properties Sold</option>
                 <option value="name">Sort by Name</option>
               </select>
-            </div>
+            </div> */}
             
             {/* Sort Order */}
-            <Button
+            {/* <Button
               variant="outline"
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center space-x-2 text-sm sm:text-base"
-            >
+              className="flex items-center space-x-2 text-sm sm:text-base">
               {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
               <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
               <span className="sm:hidden">{sortOrder === 'asc' ? 'Asc' : 'Desc'}</span>
-            </Button>
+            </Button> */}
             
             {/* Specialty Filter */}
-            <select
+            {/* <select
               value={filterSpecialty}
               onChange={(e) => setFilterSpecialty(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
@@ -298,17 +290,17 @@ export default function AgentsPage() {
               {allSpecialties.map(specialty => (
                 <option key={specialty} value={specialty}>{specialty}</option>
               ))}
-            </select>
-          </div>
+            </select> */}
+          {/* </div> */}
           
           {/* Results Count */}
-          <div className="mt-4 text-sm text-gray-600">
+          {/* <div className="mt-4 text-sm text-gray-600">
             Showing {startIndex + 1}-{Math.min(endIndex, filteredAndSortedAgents.length)} of {filteredAndSortedAgents.length} agents
             {searchTerm && ` matching "${searchTerm}"`}
             {filterSpecialty && ` in ${filterSpecialty}`}
             {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         {/* Loading State */}
         {isLoading && (

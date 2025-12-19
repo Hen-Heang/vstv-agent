@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { Calendar, Phone, MessageCircle } from 'lucide-react'
+import { Calendar, Phone } from 'lucide-react'
+import { Icons } from '@/components/shared/icons'
 
 export default function ScheduleVisit() {
   return (
@@ -20,9 +21,14 @@ export default function ScheduleVisit() {
                 Call Now
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-              <a href="https://t.me/vstvagent" className="flex items-center gap-2">
-                <MessageCircle className="h-5 w-5" />
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-[#229ED9] border-transparent text-white hover:bg-[#1d8abf]"
+              asChild
+            >
+              <a href="https://t.me/assistant_vstv168" className="flex items-center gap-2">
+                <Icons.Telegram className="h-5 w-5" />
                 Telegram
               </a>
             </Button>

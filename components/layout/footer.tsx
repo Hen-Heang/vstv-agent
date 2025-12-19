@@ -26,19 +26,20 @@ const navigation = {
       name: 'Telegram',
       href: 'https://t.me/assistant_vstv168',
       icon: Icons.Telegram,
-      color: 'hover:text-blue-400'
+      className: 'bg-[#229ED9] text-white hover:bg-[#1d8abf] shadow-[#229ED9]/30'
     },
     {
       name: 'Facebook',
       href: 'https://www.facebook.com/share/1BL2cw4au3/?mibextid=wwXIfr',
       icon: Icons.Facebook,
-      color: 'hover:text-blue-500'
+      className: 'bg-[#1877F2] text-white hover:bg-[#1667d9] shadow-[#1877F2]/30'
     },
     {
       name: 'Instagram',
       href: 'https://instagram.com/vstvagent',
       icon: Icons.Instagram,
-      color: 'hover:text-pink-500'
+      className:
+        'bg-gradient-to-tr from-[#f58529] via-[#dd2a7b] to-[#515bd4] text-white hover:brightness-110 shadow-pink-500/20'
     },
   ],
 }
@@ -134,7 +135,7 @@ export default function Footer() {
                 >
                   <Link 
                     href={item.href} 
-                    className={`inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-brand-secondary-800/50 backdrop-blur-sm border border-brand-secondary-700/50 text-brand-neutral-400 ${item.color} transition-all duration-300 hover:border-brand-primary-500/50 hover:bg-brand-primary-500/10 hover:shadow-lg hover:shadow-brand-primary-500/20`}
+                    className={`inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl ${item.className} shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-secondary-900`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
