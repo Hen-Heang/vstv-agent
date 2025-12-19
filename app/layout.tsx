@@ -4,8 +4,18 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import React from "react";
 
+function getSiteUrl() {
+  const fromEnv = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL
+  if (fromEnv) return fromEnv
+
+  const vercelUrl = process.env.VERCEL_URL
+  if (vercelUrl) return `https://${vercelUrl}`
+
+  return "http://localhost:3000"
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(getSiteUrl()),
   title: "VSTV Agent",
   description: "VSTV AGENT (CAMBODIA) CO., LTD - Your trusted real estate partner for property sales and rentals in Cambodia. Expert guidance for apartments, condos, villas, and land investments.",
   keywords: "VSTV Agent, real estate, Cambodia, property, apartment, condo, villa, land, sales, rental, Phnom Penh, real estate agent Cambodia",
