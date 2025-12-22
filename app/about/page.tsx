@@ -3,10 +3,11 @@ import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Shield, Users, Award, TrendingUp, MapPin, Phone, Mail } from 'lucide-react'
+import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
 
 export const metadata = {
-  title: 'About Us - VSTV Agent',
-  description: 'Learn about VSTV Agent, Cambodia\'s trusted real estate company with years of experience helping clients find their dream properties',
+  title: `About - ${siteConfig.companyName}`,
+  description: `Learn about ${siteConfig.companyName} and how we help clients find the right home faster.`,
 }
 
 const values = [
@@ -261,10 +262,11 @@ export default function AboutPage() {
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
                   <p className="text-sm text-gray-600">
-                    098-261-807 / 098-261-808<br />
-                    098-261-901 / 012-261-807<br />
-                    098-261-806<br />
-                    Mon - Fri, 8AM - 6PM
+                    <a href={getCallHref()} className="font-semibold text-gray-900 hover:underline">
+                      {siteConfig.phoneNumber}
+                    </a>
+                    <br />
+                    {siteConfig.business.officeHours ?? 'Message anytime on Telegram'}
                   </p>
                 </div>
                 
@@ -299,11 +301,19 @@ export default function AboutPage() {
                     Contact Us Today
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-                  <Link href="/properties">
-                    Browse Properties
-                  </Link>
-                </Button>
+                {siteConfig.featureFlags.listings ? (
+                  <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+                    <Link href="/properties">
+                      Browse Properties
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+                    <Link href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}>
+                      Message on Telegram
+                    </Link>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

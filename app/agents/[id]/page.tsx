@@ -8,6 +8,16 @@ import { Icons } from '@/components/shared/icons'
 import { getAgentById } from '@/lib/static-store'
 import type { Agent } from '@/types/agent'
 import { toMailtoHref, toTelegramHref, toTelHref } from '@/utils/contact-links'
+import { siteConfig } from '@/config/site'
+
+const siteTelegramHandle = (() => {
+  try {
+    const url = new URL(siteConfig.telegramUrl)
+    return url.pathname.replace(/^\/+/, '').trim()
+  } catch {
+    return ''
+  }
+})()
 
 const fallbackAgents = {
 
@@ -16,8 +26,8 @@ const fallbackAgents = {
     name: "OEURN CHET",
     position: "Real Estate Agent Supervisor",
     email: "chetvstv@gmail.com",
-    phone: "098-261-807",
-    telegram: "Salevstv007",
+    phone: siteConfig.phoneNumber,
+    telegram: siteTelegramHandle,
     avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Oeurn Chet serves as a Real Estate Agent Supervisor, combining leadership skills with extensive property market knowledge. His supervisory role allows him to guide both clients and team members toward successful property transactions.",
     experience_years: 9,
@@ -326,42 +336,54 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
               </CardContent>
             </Card>
 
-            {/* Recent Properties */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Properties</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {mockProperties.map((property) => (
-                    <Link key={property.id} href={`/properties/${property.id}`} className="group block">
-                      <div className="relative h-40 sm:h-48 mb-3">
-                        <Image
-                          src={property.image}
-                          alt={property.title}
-                          fill
-                          className="object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <h4 className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
-                        {property.title}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-600 mb-1">{property.location}</p>
-                      <p className="text-xs sm:text-sm font-medium text-blue-600">
-                        {property.priceType === 'rent' ? `$${property.price}/month` : `$${property.price.toLocaleString()}`}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-                <div className="mt-6 text-center">
-                  <Button variant="outline" asChild>
-                    <Link href="/properties">
-                      View All Properties
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {siteConfig.featureFlags.listings ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Properties</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {mockProperties.map((property) => (
+                      <Link key={property.id} href={`/properties/${property.id}`} className="group block">
+                        <div className="relative h-40 sm:h-48 mb-3">
+                          <Image
+                            src={property.image}
+                            alt={property.title}
+                            fill
+                            className="object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <h4 className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
+                          {property.title}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-gray-600 mb-1">{property.location}</p>
+                        <p className="text-xs sm:text-sm font-medium text-blue-600">
+                          {property.priceType === 'rent' ? `$${property.price}/month` : `$${property.price.toLocaleString()}`}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="mt-6 text-center">
+                    <Button variant="outline" asChild>
+                      <Link href="/properties">
+                        View All Properties
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Listings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">
+                    Listings are available via Telegram. Send your budget + area and we’ll share options.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}

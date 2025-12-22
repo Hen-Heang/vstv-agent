@@ -1,4 +1,5 @@
 import AgentCard from '@/components/agents/agent-card'
+import { siteConfig } from '@/config/site'
 
 const demoAgents = [
 
@@ -7,8 +8,8 @@ const demoAgents = [
     name: "OEURN CHET",
     position: "Real Estate Agent Supervisor",
     email: "chetvstv@gmail.com",
-    phone: "098-261-807",
-    telegram: "Salevstv007",
+    phone: siteConfig.phoneNumber,
+    telegram: "",
     avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
     bio: "Oeurn Chet serves as a Real Estate Agent Supervisor, combining leadership skills with extensive property market knowledge. His supervisory role allows him to guide both clients and team members toward successful property transactions.",
     experience_years: 9,

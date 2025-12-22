@@ -8,15 +8,19 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/cn'
 import { Icons } from '@/components/shared/icons'
+import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
 
-const navigation = [
+const marketingNavigation = [
   { name: 'Home', href: '/' },
-  { name: 'Properties', href: '/properties' },
-  { name: 'Units', href: '/units' },
   { name: 'Our Services', href: '/services' },
   { name: 'Agents', href: '/agents' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
+]
+
+const listingsNavigation = [
+  { name: 'Properties', href: '/properties' },
+  { name: 'Units', href: '/units' },
 ]
 
 
@@ -24,6 +28,9 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  const navigation = siteConfig.featureFlags.listings
+    ? [...marketingNavigation.slice(0, 1), ...listingsNavigation, ...marketingNavigation.slice(1)]
+    : marketingNavigation
 
   // Close the mobile menu on route change (prevents it staying open after navigation)
   useEffect(() => {
@@ -67,7 +74,7 @@ export default function Header() {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 transition-all duration-500 ease-out",
+      "sticky top-0 z-50 transition-all duration-500 ease-out motion-reduce:transition-none",
       scrolled 
         ? "bg-white/90 backdrop-blur-xl shadow-xl shadow-gray-900/5 border-b border-white/20" 
         : "bg-white/95 backdrop-blur-sm shadow-md shadow-gray-900/10"
@@ -75,8 +82,8 @@ export default function Header() {
       <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-8 lg:py-4" aria-label="Global">
         <div className="flex lg:flex-1">
-          <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98]">
-            <span className="sr-only">VSTV Agent</span>
+          <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100">
+            <span className="sr-only">{siteConfig.companyName}</span>
             <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50 group-hover:ring-brand-secondary-300/70">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
@@ -101,7 +108,7 @@ export default function Header() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-brand-text-primary group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">VSTV Agent</span>
+                <span className="text-base sm:text-lg lg:text-xl font-bold text-brand-text-primary group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">{siteConfig.companyName}</span>
                 <span className="text-xs font-medium text-brand-text-secondary group-hover:text-brand-text-primary -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
@@ -113,7 +120,7 @@ export default function Header() {
           <Dialog.Trigger asChild>
             <button
               type="button"
-              className="inline-flex items-center justify-center p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center justify-center p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100"
               aria-label="Open main menu"
               style={{ minWidth: '56px', minHeight: '56px' }}
             >
@@ -160,7 +167,7 @@ export default function Header() {
             asChild
             className="relative border-gray-200/80 bg-white/50 backdrop-blur-sm hover:border-brand-primary-300/80 hover:text-brand-primary-600 hover:bg-brand-primary-50/80 transition-all duration-300 text-xs lg:text-sm shadow-sm hover:shadow-md font-semibold ring-1 ring-gray-200/20 hover:ring-brand-primary-200/50 rounded-xl"
           >
-            <Link href="tel:+85598261807" className="flex items-center gap-1.5 lg:gap-2">
+            <Link href={getCallHref()} className="flex items-center gap-1.5 lg:gap-2">
               <Icons.Phone className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
               <span className="hidden xl:inline">Call Us</span>
               <span className="xl:hidden">Call</span>
@@ -171,7 +178,7 @@ export default function Header() {
             asChild
             className="relative bg-gradient-to-r from-brand-primary-500 to-brand-primary-600 hover:from-brand-primary-600 hover:to-brand-primary-700 shadow-lg hover:shadow-xl hover:shadow-brand-primary-500/25 transition-all duration-300 text-xs lg:text-sm font-semibold rounded-xl ring-1 ring-brand-primary-500/20 hover:ring-brand-primary-600/30 backdrop-blur-sm"
           >
-            <Link href="https://t.me/assistant_vstv168" className="flex items-center gap-1.5 lg:gap-2">
+            <Link href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)} className="flex items-center gap-1.5 lg:gap-2">
               <Icons.Telegram className="h-3.5 w-3.5 lg:h-4 lg:w-4 transition-transform duration-200 group-hover:scale-110" />
               <span className="hidden xl:inline">Telegram</span>
               <span className="xl:hidden">TG</span>
@@ -197,7 +204,7 @@ export default function Header() {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-lg font-bold text-gray-900">VSTV Agent</span>
+                    <span className="text-lg font-bold text-gray-900">{siteConfig.companyName}</span>
                     <span className="text-sm text-indigo-600 font-semibold uppercase tracking-wide">Real Estate</span>
                   </div>
                 </Link>
@@ -261,7 +268,7 @@ export default function Header() {
                     className="w-full min-h-[56px] text-lg font-bold border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50" 
                     asChild
                   >
-                    <Link href="tel:+85598261807" className="flex items-center justify-center gap-4">
+                    <Link href={getCallHref()} className="flex items-center justify-center gap-4">
                       <div className="p-2 bg-indigo-100 rounded-full">
                         <svg className="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -275,7 +282,7 @@ export default function Header() {
                     className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 min-h-[56px] text-lg font-bold shadow-lg hover:shadow-xl" 
                     asChild
                   >
-                    <Link href="https://t.me/assistant_vstv168" className="flex items-center justify-center gap-4">
+                    <Link href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)} className="flex items-center justify-center gap-4">
                       <div className="p-2 bg-white/20 rounded-full">
                         <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>

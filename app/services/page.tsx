@@ -2,10 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Home, Building, Users, TrendingUp, Shield, Clock } from 'lucide-react'
 import Link from 'next/link'
+import { getTelegramHref, siteConfig } from '@/config/site'
 
 export const metadata = {
-  title: 'Our Services - VSTV Agent',
-  description: 'Comprehensive real estate services including property sales, rentals, management, and investment consulting',
+  title: `Our Services - ${siteConfig.companyName}`,
+  description: `Comprehensive real estate services by ${siteConfig.companyName}.`,
 }
 
 const services = [
@@ -21,8 +22,8 @@ const services = [
       "Land and development plots",
       "Investment opportunities"
     ],
-    cta: "Browse Properties for Sale",
-    href: "/properties?type=sale"
+    cta: "Request options via Telegram",
+    href: getTelegramHref("Hi VSTV Agent, I want to BUY. Budget: ____. Area: ____. Please send options.")
   },
   {
     id: 2,
@@ -36,8 +37,8 @@ const services = [
       "Corporate housing",
       "Luxury rentals"
     ],
-    cta: "Browse Rental Properties",
-    href: "/properties?type=rent"
+    cta: "Request options via Telegram",
+    href: getTelegramHref("Hi VSTV Agent, I want to RENT. Budget: ____. Area: ____. Please send options.")
   },
   {
     id: 3,
@@ -232,11 +233,19 @@ export default function ServicesPage() {
                     Contact an Agent
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-                  <Link href="/properties">
-                    Browse Properties
-                  </Link>
-                </Button>
+                {siteConfig.featureFlags.listings ? (
+                  <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+                    <Link href="/properties">
+                      Browse Properties
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+                    <Link href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}>
+                      Message on Telegram
+                    </Link>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

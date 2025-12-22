@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Calendar, Phone } from 'lucide-react'
 import { Icons } from '@/components/shared/icons'
+import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
 
 export default function ScheduleVisit() {
   return (
@@ -16,7 +17,7 @@ export default function ScheduleVisit() {
           
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" variant="secondary" asChild>
-              <a href="tel:+855123456789" className="flex items-center gap-2">
+              <a href={getCallHref()} className="flex items-center gap-2">
                 <Phone className="h-5 w-5" />
                 Call Now
               </a>
@@ -27,7 +28,7 @@ export default function ScheduleVisit() {
               className="bg-[#229ED9] border-transparent text-white hover:bg-[#1d8abf]"
               asChild
             >
-              <a href="https://t.me/assistant_vstv168" className="flex items-center gap-2">
+              <a href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)} className="flex items-center gap-2">
                 <Icons.Telegram className="h-5 w-5" />
                 Telegram
               </a>
@@ -35,7 +36,7 @@ export default function ScheduleVisit() {
             <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
               <a href="/contact" className="flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
-                Contact Form
+                Contact
               </a>
             </Button>
           </div>

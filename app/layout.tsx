@@ -3,6 +3,9 @@ import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import React from "react";
+import FloatingCTA from "@/components/cta/floating-cta";
+import MobileStickyCTA from "@/components/cta/mobile-sticky-cta";
+import { siteConfig } from "@/config/site";
 
 function getSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL
@@ -16,17 +19,17 @@ function getSiteUrl() {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: "VSTV Agent",
-  description: "VSTV AGENT (CAMBODIA) CO., LTD - Your trusted real estate partner for property sales and rentals in Cambodia. Expert guidance for apartments, condos, villas, and land investments.",
-  keywords: "VSTV Agent, real estate, Cambodia, property, apartment, condo, villa, land, sales, rental, Phnom Penh, real estate agent Cambodia",
-  authors: [{ name: "VSTV AGENT (CAMBODIA) CO., LTD" }],
+  title: siteConfig.companyName,
+  description: `${siteConfig.companyName} - Your trusted real estate partner in Cambodia. Message us on Telegram for fast options.`,
+  keywords: `${siteConfig.companyName}, real estate, Cambodia, Phnom Penh, property, condo, apartment, villa, land, rental, sale`,
+  authors: [{ name: siteConfig.companyName }],
   icons: {
     icon: "/images/company/VSTV.png",
     apple: "/images/company/VSTV.png",
   },
   openGraph: {
-    title: "VSTV AGENT (CAMBODIA) CO., LTD - Find Your Dream Property in Cambodia",
-    description: "Your trusted real estate partner for property sales and rentals in Cambodia",
+    title: `${siteConfig.companyName} - Real Estate in Cambodia`,
+    description: `${siteConfig.companyName} - Message us on Telegram for fast options.`,
     type: "website",
     locale: "en_US",
     images: [
@@ -40,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "VSTV AGENT (CAMBODIA) CO., LTD - Find Your Dream Property in Cambodia",
-    description: "Your trusted real estate partner for property sales and rentals in Cambodia",
+    title: `${siteConfig.companyName} - Real Estate in Cambodia`,
+    description: `${siteConfig.companyName} - Message us on Telegram for fast options.`,
     images: ["/images/company/VSTV.png"],
   },
 };
@@ -61,6 +64,8 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
+        <FloatingCTA />
+        <MobileStickyCTA />
       </body>
     </html>
   );
