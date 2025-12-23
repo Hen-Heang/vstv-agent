@@ -30,12 +30,14 @@ const agents: AgentCard[] = [
     role: 'Property Sales',
     languages: ['Khmer', 'English'],
     specialties: ['Condos', 'Villas', 'Land'],
+    imageSrc: '/images/agents/sarah-wilson.jpg',
   },
   {
     name: 'Rental Support',
     role: 'Property Rental',
     languages: ['Khmer', 'English'],
     specialties: ['Apartments', 'Condo rentals', 'Short/Long term'],
+    imageSrc: '/images/agents/mike-johnson.jpg',
   },
 ]
 

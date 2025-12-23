@@ -387,7 +387,14 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               {/* Sticky Contact Card */}
-              <div id="contact-section" className={`${isContactSticky ? 'fixed top-4 right-4 w-80 z-50' : 'sticky top-4'}`}>
+              <div
+                id="contact-section"
+                className={
+                  isContactSticky
+                    ? 'relative w-full lg:fixed lg:top-4 lg:right-4 lg:w-80 lg:z-50'
+                    : 'relative w-full lg:sticky lg:top-4'
+                }
+              >
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-lg">Contact Agent</CardTitle>

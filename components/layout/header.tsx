@@ -115,8 +115,22 @@ export default function Header() {
           </Link>
         </div>
         
-        {/* Mobile menu button */}
-        <div className="flex lg:hidden">
+        {/* Mobile quick actions + menu button */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}
+            aria-label="Chat on Telegram"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#229ED9] text-white shadow-lg shadow-black/10 ring-1 ring-white/20 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100"
+          >
+            <Icons.Telegram className="h-5 w-5" />
+          </a>
+          <a
+            href={getCallHref()}
+            aria-label="Call us"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-gray-900 shadow-lg shadow-black/10 ring-1 ring-black/10 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100"
+          >
+            <Icons.Phone className="h-5 w-5 text-brand-primary-700" />
+          </a>
           <Dialog.Trigger asChild>
             <button
               type="button"

@@ -3,7 +3,7 @@ import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
 
 export default function FloatingCTA() {
   return (
-    <div className="fixed bottom-[88px] right-4 z-50 flex flex-col gap-2 md:bottom-6 md:right-6">
+    <div className="fixed bottom-6 right-6 z-50 hidden flex-col gap-2 md:flex">
       <a
         href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}
         aria-label="Chat on Telegram"
@@ -21,4 +21,3 @@ export default function FloatingCTA() {
     </div>
   )
 }
-

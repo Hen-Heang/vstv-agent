@@ -174,7 +174,7 @@ export default function InteractiveMap({
 
       {/* Property Details Panel */}
       {selectedMarker && (
-        <div className="absolute bottom-4 right-4 w-80 bg-white rounded-lg shadow-xl border p-4 animate-in slide-in-from-bottom-4">
+        <div className="absolute bottom-4 left-4 right-4 w-auto max-w-sm bg-white rounded-lg shadow-xl border p-4 animate-in slide-in-from-bottom-4 md:left-auto md:right-4 md:w-80">
           <div className="flex items-start gap-3">
             <Image
               src={selectedMarker.image}
@@ -209,7 +209,7 @@ export default function InteractiveMap({
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+      <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg md:left-1/2 md:right-auto md:transform md:-translate-x-1/2">
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>

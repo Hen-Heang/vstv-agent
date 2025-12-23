@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
@@ -78,7 +79,17 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 export default function MarketingHome() {
+  const shouldReduceMotion = useReducedMotion()
   const social = siteConfig.social
+  const showcaseImages = [
+    { src: '/images/properties/featured/luxury-condo-bkk1.jpg', label: 'Luxury condo • BKK1' },
+    { src: '/images/properties/featured/modern-apartment-toul-kork.jpg', label: 'Modern apartment • Toul Kork' },
+    { src: '/images/properties/featured/high-end-condo-river-view.jpg', label: 'River view • Tonle Bassac' },
+    { src: '/images/properties/featured/premium-villa-sen-sok.jpg', label: 'Premium villa • Sen Sok' },
+    { src: '/images/properties/featured/cozy-studio-city-center.jpg', label: 'Cozy studio • City center' },
+    { src: '/images/properties/featured/spacious-family-house.jpg', label: 'Family house • Chroy Changvar' },
+  ]
+
   const followLinks = [
     social.facebook ? { name: 'Facebook', href: social.facebook, icon: Icons.Facebook } : null,
     social.tiktok ? { name: 'TikTok', href: social.tiktok, icon: Icons.MessageCircle } : null,
@@ -89,31 +100,60 @@ export default function MarketingHome() {
     <div className="bg-white">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-brand-secondary-50 to-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.10),_transparent_45%)]" />
+        <div className="absolute inset-0">
+          {shouldReduceMotion ? (
+            <Image
+              src="/images/backgrounds/hero-phnom-penh.jpg"
+              alt="Phnom Penh skyline"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          ) : (
+            <motion.div
+              className="absolute inset-0"
+              initial={{ scale: 1.02 }}
+              animate={{ scale: [1.02, 1.08, 1.02] }}
+              transition={{ duration: 26, ease: 'easeInOut', repeat: Infinity }}
+            >
+              <Image
+                src="/images/backgrounds/hero-phnom-penh.jpg"
+                alt="Phnom Penh skyline"
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            </motion.div>
+          )}
+          <div className="absolute inset-0 bg-white/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.10),_transparent_45%)]" />
+        </div>
         <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-6 sm:pt-16 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
-              <p className="inline-flex items-center rounded-full bg-brand-primary-50 px-3 py-1 text-xs font-semibold text-brand-primary-700 ring-1 ring-brand-primary-600/10">
+              <p className="inline-flex max-w-full flex-wrap items-center rounded-full bg-brand-primary-50 px-3 py-1 text-xs font-semibold text-brand-primary-700 ring-1 ring-brand-primary-600/10">
                 Fast options via Telegram • Phnom Penh & nearby
               </p>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl break-words">
                 Find the right home faster in Cambodia.
               </h1>
               <p className="mt-4 text-base leading-7 text-gray-600 sm:text-lg">
                 Tell us your budget and preferred area. We’ll send curated options quickly — no forms, no waiting.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-7 flex flex-wrap gap-3">
                 <a
                   href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#229ED9] px-5 text-sm font-semibold text-white shadow-sm transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:scale-100"
+                  className="inline-flex h-11 basis-[calc(50%-0.375rem)] flex-1 items-center justify-center gap-2 rounded-xl bg-[#229ED9] px-5 text-sm font-semibold text-white shadow-sm transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:scale-100"
                 >
                   <Icons.Telegram className="h-5 w-5" />
                   Telegram
                 </a>
                 <a
                   href={getCallHref()}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 text-sm font-semibold text-gray-900 shadow-sm transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:scale-100"
+                  className="inline-flex h-11 basis-[calc(50%-0.375rem)] flex-1 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 text-sm font-semibold text-gray-900 shadow-sm transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:scale-100"
                 >
                   <Icons.Phone className="h-5 w-5 text-brand-primary-700" />
                   Call
@@ -156,6 +196,69 @@ export default function MarketingHome() {
                       </div>
                     ))}
                   </div>
+
+                  <div className="mt-6 rounded-2xl border border-black/5 bg-gray-50 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-bold text-gray-900">Recent listings</div>
+                        <div className="mt-1 text-xs text-gray-600">Scroll or hover to pause.</div>
+                      </div>
+                      <Link href="/properties" className="text-xs font-semibold text-brand-primary-700 hover:text-brand-primary-800">
+                        View all
+                      </Link>
+                    </div>
+
+                    <div className="mt-4 lg:hidden">
+                      <div className="flex gap-3 overflow-x-auto pb-2 pr-4 [-webkit-overflow-scrolling:touch]">
+                        {showcaseImages.map((img) => (
+                          <Link
+                            key={img.src}
+                            href="/properties"
+                            className="group relative h-28 w-44 flex-none overflow-hidden rounded-2xl ring-1 ring-black/5"
+                            aria-label={`Open properties (example: ${img.label})`}
+                          >
+                            <Image
+                              src={img.src}
+                              alt={img.label}
+                              fill
+                              sizes="176px"
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                            <div className="absolute bottom-2 left-2 right-2 text-[11px] font-semibold text-white">{img.label}</div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="vstv-pausable mt-4 hidden lg:grid grid-cols-2 gap-3">
+                      {[0, 1].map((col) => (
+                        <div key={col} className="h-[320px] overflow-hidden rounded-2xl bg-white ring-1 ring-black/5">
+                          <div className={col === 0 ? 'vstv-marquee-y space-y-3 p-3' : 'vstv-marquee-y-reverse space-y-3 p-3'}>
+                            {showcaseImages.concat(showcaseImages).map((img, idx) => (
+                              <Link
+                                key={`${img.src}-${idx}`}
+                                href="/properties"
+                                className="group relative block h-28 overflow-hidden rounded-2xl ring-1 ring-black/5"
+                                aria-label={`Open properties (example: ${img.label})`}
+                              >
+                                <Image
+                                  src={img.src}
+                                  alt={img.label}
+                                  fill
+                                  sizes="(min-width: 1024px) 220px, 50vw"
+                                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                                <div className="absolute bottom-2 left-2 right-2 text-[11px] font-semibold text-white">{img.label}</div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="mt-6 text-xs text-gray-500">
                     Prefer Khmer? Send a message in Khmer — we’ll reply.
                   </div>

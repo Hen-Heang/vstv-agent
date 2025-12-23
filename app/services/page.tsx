@@ -40,36 +40,36 @@ const services = [
     cta: "Request options via Telegram",
     href: getTelegramHref("Hi VSTV Agent, I want to RENT. Budget: ____. Area: ____. Please send options.")
   },
-  {
-    id: 3,
-    title: "Property Management",
-    icon: Shield,
-    description: "Professional property management services to maximize your investment returns.",
-    features: [
-      "Tenant screening and placement",
-      "Rent collection and accounting",
-      "Property maintenance",
-      "Legal compliance",
-      "Financial reporting"
-    ],
-    cta: "Learn More",
-    href: "/contact"
-  },
-  {
-    id: 4,
-    title: "Investment Consulting",
-    icon: TrendingUp,
-    description: "Expert advice on real estate investments and market opportunities in Cambodia.",
-    features: [
-      "Market analysis and trends",
-      "Investment strategy planning",
-      "ROI calculations",
-      "Risk assessment",
-      "Portfolio diversification"
-    ],
-    cta: "Get Consultation",
-    href: "/contact"
-  }
+  // {
+  //   id: 3,
+  //   title: "Property Management",
+  //   icon: Shield,
+  //   description: "Professional property management services to maximize your investment returns.",
+  //   features: [
+  //     "Tenant screening and placement",
+  //     "Rent collection and accounting",
+  //     "Property maintenance",
+  //     "Legal compliance",
+  //     "Financial reporting"
+  //   ],
+  //   cta: "Learn More",
+  //   href: "/contact"
+  // },
+  // {
+  //   id: 4,
+  //   title: "Investment Consulting",
+  //   icon: TrendingUp,
+  //   description: "Expert advice on real estate investments and market opportunities in Cambodia.",
+  //   features: [
+  //     "Market analysis and trends",
+  //     "Investment strategy planning",
+  //     "ROI calculations",
+  //     "Risk assessment",
+  //     "Portfolio diversification"
+  //   ],
+  //   cta: "Get Consultation",
+  //   href: "/contact"
+  // }
 ]
 
 const testimonials = [
