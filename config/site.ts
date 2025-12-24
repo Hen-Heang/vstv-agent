@@ -1,3 +1,7 @@
+/**
+ * UI/UX notes: Centralized brand/business info for consistent trust cues (location, hours, contact).
+ */
+
 import { toTelHref, toTelegramPrefillHref } from '@/utils/contact-links'
 
 export type SiteSocialLinks = Partial<{
@@ -14,6 +18,7 @@ export type SiteConfig = {
   social: SiteSocialLinks
   business: Partial<{
     officeHours: string
+    location: string
   }>
   stats: {
     clientsCount: number
@@ -36,7 +41,8 @@ export const siteConfig: SiteConfig = {
     khmer24: '',
   },
   business: {
-    officeHours: 'Mon–Sat: 8:00 AM – 6:00 PM',
+    officeHours: 'Mon-Sat: 8:00 AM - 6:00 PM',
+    location: 'Phnom Penh, Cambodia',
   },
   stats: {
     clientsCount: 1000,

@@ -1,3 +1,7 @@
+/**
+ * UI/UX notes: Centralizes brand-consistent typography, shadows, and lightweight animations (shimmer, hero gradients).
+ */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -7,6 +11,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -113,8 +120,25 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        soft: '0 12px 30px -18px rgba(2, 6, 23, 0.25)',
+        lift: '0 18px 45px -22px rgba(2, 6, 23, 0.35)',
+        ring: '0 0 0 1px rgba(15, 23, 42, 0.08)',
+      },
+      backgroundImage: {
+        'hero-radial': 'radial-gradient(circle at top, rgba(37,99,235,0.12), transparent 50%)',
+        'glass': 'linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65))',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 1.4s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
 }
-

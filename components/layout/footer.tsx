@@ -1,3 +1,7 @@
+/**
+ * UI/UX notes: Footer emphasizes credibility (hours, location, phone) with clear, scannable labels.
+ */
+
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType } from 'react'
@@ -92,6 +96,9 @@ export default function Footer() {
               <div className="text-sm font-semibold text-gray-900">Office Hours</div>
               <div className="mt-4 text-sm text-gray-600">
                 {siteConfig.business.officeHours ?? 'Message anytime on Telegram.'}
+              </div>
+              <div className="mt-3 text-sm text-gray-600">
+                Location: <span className="font-semibold text-gray-900">{siteConfig.business.location ?? 'Phnom Penh, Cambodia'}</span>
               </div>
               <div className="mt-3 text-sm text-gray-600">
                 Phone: <a href={getCallHref()} className="font-semibold text-gray-900">{siteConfig.phoneNumber}</a>

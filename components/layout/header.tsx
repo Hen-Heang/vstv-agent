@@ -81,10 +81,10 @@ export default function Header() {
     )}>
       <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-8 lg:py-4" aria-label="Global">
-        <div className="flex lg:flex-1">
+        <div className="flex min-w-0 lg:flex-1">
           <Link href="/" className="group flex items-center space-x-3 sm:space-x-4 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100">
             <span className="sr-only">{siteConfig.companyName}</span>
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex min-w-0 items-center space-x-3 sm:space-x-4">
               <div className="relative h-9 w-11 sm:h-11 sm:w-16 rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary-50 via-brand-secondary-100 to-brand-secondary-200 p-1.5 shadow-lg group-hover:shadow-xl group-hover:shadow-brand-secondary-200/50 transition-all duration-300 ring-1 ring-brand-secondary-200/50 group-hover:ring-brand-secondary-300/70">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
                 <Image
@@ -107,8 +107,10 @@ export default function Header() {
                   }}
                 />
               </div>
-              <div className="flex flex-col">
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-brand-text-primary group-hover:text-brand-primary-600 transition-colors duration-300 tracking-tight">{siteConfig.companyName}</span>
+              <div className="flex min-w-0 flex-col">
+                <span className="max-w-[9.5rem] truncate text-base font-bold tracking-tight text-brand-text-primary transition-colors duration-300 group-hover:text-brand-primary-600 sm:max-w-none sm:text-lg lg:text-xl">
+                  {siteConfig.companyName}
+                </span>
                 <span className="text-xs font-medium text-brand-text-secondary group-hover:text-brand-text-primary -mt-0.5 hidden sm:block tracking-wide uppercase transition-colors duration-300">Real Estate</span>
               </div>
             </div>
@@ -120,23 +122,22 @@ export default function Header() {
           <a
             href={getTelegramHref(siteConfig.telegramPrefillBaseMessage)}
             aria-label="Chat on Telegram"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#229ED9] text-white shadow-lg shadow-black/10 ring-1 ring-white/20 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#229ED9] text-white shadow-lg shadow-black/10 ring-1 ring-white/20 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11 sm:w-11"
           >
             <Icons.Telegram className="h-5 w-5" />
           </a>
           <a
             href={getCallHref()}
             aria-label="Call us"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-gray-900 shadow-lg shadow-black/10 ring-1 ring-black/10 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-900 shadow-lg shadow-black/10 ring-1 ring-black/10 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11 sm:w-11"
           >
             <Icons.Phone className="h-5 w-5 text-brand-primary-700" />
           </a>
           <Dialog.Trigger asChild>
             <button
               type="button"
-              className="inline-flex items-center justify-center p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white p-2.5 text-gray-600 shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-100 hover:text-gray-900 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-14 sm:w-14 sm:p-3"
               aria-label="Open main menu"
-              style={{ minWidth: '56px', minHeight: '56px' }}
             >
               <span className="sr-only">Open main menu</span>
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">

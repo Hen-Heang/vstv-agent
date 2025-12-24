@@ -1,3 +1,7 @@
+/**
+ * UI/UX notes: Keeps quiz logic static/lightweight while improving conversion with a clear final Telegram handoff CTA.
+ */
+
 'use client'
 
 import { useMemo, useState } from 'react'
@@ -187,7 +191,7 @@ export default function FindPropertyQuiz({
                       !summary ? 'pointer-events-none opacity-50' : 'hover:opacity-95'
                     )}
                   >
-                    Send to Telegram
+                    Send my request to Telegram
                   </a>
                 </div>
               </div>
@@ -217,6 +221,17 @@ export default function FindPropertyQuiz({
               <div className="mt-6 rounded-xl bg-brand-secondary-50 p-4 text-sm text-brand-secondary-900">
                 Tip: The more specific your area and budget, the faster we can send options.
               </div>
+
+              <a
+                href={telegramHref}
+                aria-label="Send my request to Telegram"
+                className={cn(
+                  'mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#229ED9] px-4 text-sm font-semibold text-white shadow-sm transition-opacity duration-200 motion-reduce:transition-none',
+                  !summary ? 'pointer-events-none opacity-50' : 'hover:opacity-95'
+                )}
+              >
+                Send my request to Telegram
+              </a>
             </div>
           </div>
         </div>
@@ -224,4 +239,3 @@ export default function FindPropertyQuiz({
     </Section>
   )
 }
-

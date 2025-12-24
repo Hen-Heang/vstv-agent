@@ -1,4 +1,8 @@
-import type { Metadata } from "next";
+/**
+ * UI/UX notes: Adds explicit `viewport` config to ensure true mobile rendering and consistent breakpoints.
+ */
+
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -47,6 +51,12 @@ export const metadata: Metadata = {
     description: `${siteConfig.companyName} - Message us on Telegram for fast options.`,
     images: ["/images/company/VSTV.png"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
