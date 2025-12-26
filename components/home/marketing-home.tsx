@@ -237,6 +237,47 @@ export default function MarketingHome() {
                   </MotionInView>
                 ))}
               </div>
+
+              {/* Mobile: show the example homes scroller (desktop version lives in the right column) */}
+              <div className="mt-6 rounded-2xl border border-black/5 bg-white/70 p-4 shadow-soft backdrop-blur md:hidden">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-bold text-gray-900">Example homes</div>
+                    <div className="mt-1 text-xs text-gray-600">Tap any photo to request similar options.</div>
+                  </div>
+                  <a
+                    href={getTelegramHref('Hi VSTV Agent, please send me some example properties for my budget and preferred area.')}
+                    className="text-xs font-semibold text-brand-primary-700 hover:text-brand-primary-800"
+                  >
+                    Ask for options
+                  </a>
+                </div>
+
+                <div className="mt-4 flex gap-3 overflow-x-auto pb-2 pr-4 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory">
+                  {showcaseImages.map((img) => (
+                    <a
+                      key={img.src}
+                      href={getTelegramHref(`Hi VSTV Agent, I like this style: ${img.label}. Please send similar options.`)}
+                      className="group relative h-28 w-40 flex-none snap-start overflow-hidden rounded-2xl ring-1 ring-black/5 shadow-ring transition-transform duration-200 active:scale-[0.98]"
+                      aria-label={`Request similar properties (example: ${img.label})`}
+                    >
+                      <ShimmerImage
+                        src={img.src}
+                        alt={img.label}
+                        fill
+                        sizes="176px"
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        wrapperClassName="absolute inset-0"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                      <div className="absolute bottom-2 left-2 right-2 text-[11px] font-semibold text-white">{img.label}</div>
+                      <div className="absolute right-2 top-2 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-gray-900 opacity-0 shadow-soft transition-opacity duration-200 group-hover:opacity-100">
+                        Request
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="hidden md:block lg:col-span-5">
