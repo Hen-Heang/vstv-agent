@@ -338,19 +338,6 @@ export default function HeroSection() {
         </button>
       </div>
 
-      {/* Properties Counter */}
-      {/* <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20"
-        >
-          <div className="text-xs sm:text-sm text-blue-100 mb-1">Properties Available</div>
-          <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">1,247</div>
-          <div className="text-xs text-blue-200">Updated daily</div>
-        </motion.div>
-      </div> */}
     </section>
   )
 }

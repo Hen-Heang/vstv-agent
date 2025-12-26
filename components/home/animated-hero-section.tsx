@@ -208,15 +208,6 @@ export default function AnimatedHeroSection() {
           )}
         </button>
       </div>
-
-      {/* Floating Stats */}
-      {/* <div className="absolute top-8 right-8 hidden lg:block">
-        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 space-y-2">
-          <div className="text-sm text-blue-100">Properties Available</div>
-          <div className="text-2xl font-bold">1,247</div>
-          <div className="text-xs text-blue-200">Updated daily</div>
-        </div>
-      </div> */}
     </div>
   )
 }

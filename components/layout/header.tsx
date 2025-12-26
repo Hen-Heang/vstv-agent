@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/cn'
 import { Icons } from '@/components/shared/icons'
 import { getCallHref, getTelegramHref, siteConfig } from '@/config/site'
+import LanguageSwitch from '@/components/i18n/language-switch'
 
 const marketingNavigation = [
   { name: 'Home', href: '/' },
@@ -175,6 +176,8 @@ export default function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-3 lg:items-center">
           {/* Agent Image */}
        
+          <LanguageSwitch compact className="xl:hidden" />
+          <LanguageSwitch className="hidden xl:inline-flex" />
           
           <Button 
             variant="outline" 
@@ -238,10 +241,13 @@ export default function Header() {
               
               <div className="flex-1 overflow-y-auto py-4 bg-white">
                 {/* Mobile Menu Header */}
-                <div className="px-5 mb-4">
-                  <h2 className="text-lg font-bold text-gray-900 mb-2">Navigation</h2>
-                  <p className="text-sm text-gray-600">Choose your destination</p>
+              <div className="px-5 mb-4">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">Navigation</h2>
+                <p className="text-sm text-gray-600">Choose your destination</p>
+                <div className="mt-3">
+                  <LanguageSwitch className="w-full justify-center" />
                 </div>
+              </div>
                 
                 <nav className="space-y-2 px-5">
                   {navigation.map((item, index) => {

@@ -162,7 +162,7 @@ export default function MarketingHome() {
           <div className="absolute inset-0 bg-hero-radial" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(2,6,23,0.02),transparent,rgba(2,6,23,0.02))]" />
         </div>
-        <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-10 sm:px-6 sm:pb-14 sm:pt-16 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
               <p className="inline-flex max-w-full flex-wrap items-center rounded-full bg-brand-primary-50 px-3 py-1 text-xs font-semibold text-brand-primary-700 ring-1 ring-brand-primary-600/10">
@@ -211,7 +211,7 @@ export default function MarketingHome() {
                 </div>
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:grid-cols-3">
                 {['Verified options', 'Fast response', 'Local expertise'].map((text) => (
                   <div key={text} className="rounded-2xl border border-black/5 bg-white/70 p-4 text-sm font-semibold text-gray-800 shadow-soft backdrop-blur">
                     {text}
@@ -219,7 +219,7 @@ export default function MarketingHome() {
                 ))}
               </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
                 {[
                   { label: 'Clients served', value: siteConfig.stats.clientsCount, suffix: '+' },
                   { label: 'Deals supported', value: siteConfig.stats.dealsCount, suffix: '+' },
@@ -228,18 +228,18 @@ export default function MarketingHome() {
                   <MotionInView
                     key={item.label}
                     delay={0.05 * idx}
-                    className="rounded-2xl border border-black/5 bg-white/70 p-4 shadow-soft backdrop-blur"
+                    className="rounded-2xl border border-black/5 bg-white/70 p-3 text-center shadow-soft backdrop-blur sm:p-4"
                   >
-                    <div className="text-2xl font-bold tracking-tight text-gray-900">
+                    <div className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl">
                       <CountUp value={item.value} suffix={item.suffix} />
                     </div>
-                    <div className="mt-1 text-xs font-semibold text-gray-600">{item.label}</div>
+                    <div className="mt-1 text-[11px] font-semibold text-gray-600 sm:text-xs">{item.label}</div>
                   </MotionInView>
                 ))}
               </div>
             </div>
 
-            <div className="lg:col-span-5">
+            <div className="hidden md:block lg:col-span-5">
               <div className="rounded-3xl bg-gradient-to-br from-brand-primary-600 to-brand-secondary-900 p-[1px] shadow-xl shadow-black/10">
                 <div className="rounded-3xl bg-white p-6">
                   <div className="flex items-start justify-between gap-3">
@@ -351,7 +351,7 @@ export default function MarketingHome() {
       </section>
 
       {/* How it works */}
-      <MotionSection id="services" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      {/* <MotionSection id="services" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">How It Works</h2>
           <p className="mt-2 text-sm leading-6 text-gray-600 sm:text-base">
@@ -370,7 +370,7 @@ export default function MarketingHome() {
             </MotionInView>
           ))}
         </div>
-      </MotionSection>
+      </MotionSection> */}
 
       {/* Why clients trust us */}
       <MotionSection className="bg-gray-50">

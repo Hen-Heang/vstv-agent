@@ -1,6 +1,4 @@
-/**
- * UI/UX notes: Adds explicit `viewport` config to ensure true mobile rendering and consistent breakpoints.
- */
+
 
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
@@ -10,6 +8,7 @@ import React from "react";
 import FloatingCTA from "@/components/cta/floating-cta";
 import MobileStickyCTA from "@/components/cta/mobile-sticky-cta";
 import { siteConfig } from "@/config/site";
+import { LanguageProvider } from "@/components/i18n/language-provider";
 
 function getSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL
@@ -67,17 +66,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className="font-sans antialiased">
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <FloatingCTA />
-        <MobileStickyCTA />
+        <LanguageProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <FloatingCTA />
+          <MobileStickyCTA />
+        </LanguageProvider>
       </body>
     </html>
   );
 }
-
